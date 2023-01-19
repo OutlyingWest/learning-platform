@@ -28,7 +28,7 @@ class User(AbstractUser):
 class Course(models.Model):
     title = models.CharField(verbose_name='Название курса', max_length=30, unique=True)
     author = models.ForeignKey(verbose_name='Автор курса', to=settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
-    description = models.TextField(verbose_name='Описание курса', max_length=200, unique=True)
+    description = models.TextField(verbose_name='Описание курса', max_length=200)
     start_date = models.DateField(verbose_name='Старт курса')
     duration = models.PositiveIntegerField(verbose_name='Продолжительность')
     price = models.PositiveIntegerField(verbose_name='Цена', blank=True)
