@@ -6,6 +6,7 @@ from .functions import get_timestamp_path_user
 
 
 class User(AbstractUser):
+    email = models.EmailField(verbose_name='Email', unique=True)
     birthday = models.DateField(verbose_name='Дата рождения', blank=False)
     description = models.TextField(verbose_name='Обо мне', null=True, blank=True, default='', max_length=150)
     avatar = models.ImageField(verbose_name='Фото', blank=True, upload_to=get_timestamp_path_user,
@@ -25,7 +26,6 @@ class User(AbstractUser):
 
 
 class Course(models.Model):
-    id = models.AutoField()
     title = models.CharField(verbose_name='Название курса', max_length=30, unique=True)
     author = models.ForeignKey(verbose_name='Автор курса', to=settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     description = models.TextField(verbose_name='Описание курса', max_length=200, unique=True)
