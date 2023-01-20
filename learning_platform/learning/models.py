@@ -33,6 +33,7 @@ class Lesson(models.Model):
     def __str__(self):
         return f'{self.course}: Урок {self.name}'
 
+
 class Tracking(models.Model):
     lesson = models.ForeignKey(verbose_name='Урок', to=Lesson, on_delete=models.PROTECT)
     user = models.ForeignKey(verbose_name='Ученик', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
