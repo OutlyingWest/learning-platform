@@ -5,4 +5,4 @@ from .models import User
 
 admin.site.register(User)
 admin.site.unregister(Group)
-admin.site.site_header = 'Управление обучением'
+admin.site.site_header = 'Управление авторизацией'
