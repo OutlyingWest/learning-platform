@@ -22,7 +22,7 @@ class Course(models.Model):
 
 class Lesson(models.Model):
     course = models.ForeignKey(verbose_name='Курс', to=Course, on_delete=models.CASCADE)
-    name = models.CharField(verbose_name='Название курса', max_length=25, unique=True)
+    name = models.CharField(verbose_name='Название урока', max_length=25, unique=True)
     preview = models.TextField(verbose_name='Описание урока', max_length=100)
 
     class Meta:
@@ -30,6 +30,8 @@ class Lesson(models.Model):
         verbose_name = 'Урок'
         ordering = ['course']
 
+    def __str__(self):
+        return f'{self.course}: Урок {self.name}'
 
 class Tracking(models.Model):
     lesson = models.ForeignKey(verbose_name='Урок', to=Lesson, on_delete=models.PROTECT)
