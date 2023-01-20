@@ -6,14 +6,14 @@ from .functions import get_timestamp_path_user
 
 class User(AbstractUser):
     email = models.EmailField(verbose_name='Email', unique=True)
-    birthday = models.DateField(verbose_name='Дата рождения', blank=False)
+    birthday = models.DateField(verbose_name='Дата рождения', blank=False, null=True)
     description = models.TextField(verbose_name='Обо мне', null=True, blank=True, default='', max_length=150)
     avatar = models.ImageField(verbose_name='Фото', blank=True, upload_to=get_timestamp_path_user,
                                validators=[FileExtensionValidator(allowed_extensions=['jpg', 'bmp', 'png'],
                                                                   message='Wrong file format')])
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['username']
 
     class Meta:
         verbose_name_plural = 'Участники'
