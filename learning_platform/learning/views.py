@@ -28,7 +28,7 @@ def detail(request, course_id):
     lessons = Lesson.objects.filter(course=course_id)
     context = {
         'course': course,
-        'lessons': lessons
+        'lessons': lessons,
     }
     return render(request,
                   context=context,

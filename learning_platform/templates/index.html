@@ -1,10 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="courses_container">
+        {% for course in courses %}
+            <div class="course_preview">
+                <p><a href="{% url 'detail' course.pk %}">{{ course.title }}</a></p>
+                <p>{{ course.start_date}}</p>
+                <p>{{ course.description }}</p>
+                <p><span class="price">{{ course.price }} у.е.</span></p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
