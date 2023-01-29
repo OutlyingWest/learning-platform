@@ -16,7 +16,18 @@ def index(request):
 
 
 def create(request):
-    return HttpResponse('Форма для создания собственного курса')
+    if request.method == 'POST':
+        data = request.POST
+        Course.objects.create(title=data['title'],
+                              author=request.user,
+                              description=data['description'],
+                              start_date=data['start_date'],
+                              duration=data['duration'],
+                              price=data['price'],
+                              count_lessons=data['count_lessons'])
+        return redirect('index')
+    else:
+        return render(request, 'create.html')
 
 
 def delete(request, course_id):

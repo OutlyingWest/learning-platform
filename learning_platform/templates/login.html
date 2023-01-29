@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="main_container">
+        <div class="main_item">
+            <form id="form" method="post">
+                <h3>{% block form_name %}Вход{% endblock %}</h3>
+                {% csrf_token %}
+                <p><input type="text" maxlength="256" placeholder="Email" name="email" required></p>
+                <p><input type="password" placeholder="Пароль" name="password" minlength="5" required></p>
+                <p><button type="submit">Войти</button></p>
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,9 +1,19 @@
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate
 from django.http import HttpResponse
-from django.shortcuts import render
 
 
 def login(request):
-    return HttpResponse('Страница для входа пользователя на сайт')
+    if request.method == 'POST':
+        data = request.POST
+        user = authenticate(email=data['email'], password=data['password'])
+        if user and user.is_active:
+            login(request, user)
+            return redirect('index')
+        else:
+            return HttpResponse('Ваш аккаунт заблокирован')
+    else:
+        return render(request, 'login.html')
 
 
 def register(request):
