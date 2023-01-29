@@ -1,14 +1,15 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate
+from django.contrib import auth
 from django.http import HttpResponse
+from .models import User
 
 
 def login(request):
     if request.method == 'POST':
         data = request.POST
-        user = authenticate(email=data['email'], password=data['password'])
+        user = auth.authenticate(email=data['email'], password=data['password'])
         if user and user.is_active:
-            login(request, user)
+            auth.login(request, user)
             return redirect('index')
         else:
             return HttpResponse('Ваш аккаунт заблокирован')
@@ -17,11 +18,26 @@ def login(request):
 
 
 def register(request):
-    return HttpResponse('Страница для регистрации пользователя')
+    if request.method == 'POST':
+        text_data = request.POST
+        file_data = request.FILES
+        user = User(email=text_data['email'],
+                    first_name=text_data['first_name'],
+                    last_name=text_data['last_name'],
+                    birthday=text_data['birthday'],
+                    avatar=file_data['avatar'],
+                    description=text_data['description'],)
+        user.set_password(text_data['password'])
+        user.save()
+        auth.login(request, user)
+        return redirect('index')
+    else:
+        return render(request, 'register.html')
 
 
 def logout(request):
-    return HttpResponse('Это представление выполняет выход и редирект на страницу входа')
+    auth.logout(request)
+    return redirect('login')
 
 
 def change_password(request):
