@@ -1,10 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends 'base.html' %}
+{% block content %}
+    <div class="course_container">
+        <div class="course_preview" style="transform: none; box-shadow: none; border: none">
+            <p><a href="{% url 'delete' course.pk %}">Удалить</a></p>
+            <p>{{ course.title }}</p>
+            <p>Автор: {{ course.author.last_name }} {{ course.author.first_name }}</p>
+            <p>Старт: {{ course.start_date }}</p>
+            <p>Продолжительность: {{ course.duration }} месяцев/-a</p>
+            <p>Количество уроков: {{ course.count_lessons }}</p>
+            <p>{{ course.description }}</p>
+            <p><span class="price">{{ course.price }} у.е.</span></p>
+        </div>
+        <div class="course_preview" style="margin-top: 1%; transform: none; box-shadow: none; border: none;">
+            <p style="font-weight: bold">Список уроков</p>
+            {% for lesson in lessons %}
+                <p>{{ lesson.name }}</p>
+                <p>{{ lesson.preview }}</p>
+            {% endfor %}
+            <form method="post" action="{% url 'enroll' course.pk %}">
+                {% csrf_token %}
+                <input type="submit" value="Записаться">
+            </form>
+        </div>
+    </div>
+{% endblock %}
