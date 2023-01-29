@@ -1,7 +1,7 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from datetime import datetime
-from .models import Course, Lesson
+from .models import Course, Lesson, Tracking
 
 
 def index(request):
@@ -20,7 +20,8 @@ def create(request):
 
 
 def delete(request, course_id):
-    return HttpResponse(f'Удаление указанного курса id: {course_id}')
+    Course.objects.get(id=course_id).delete()
+    return redirect('index')
 
 
 def detail(request, course_id):
@@ -36,4 +37,20 @@ def detail(request, course_id):
 
 
 def enroll(request, course_id):
-    return HttpResponse(f'Здесь можно записаться на выбранный курс id: {course_id}')
+    if request.user.is_anonymous:
+        return redirect('login')
+    else:
+        is_existed = Tracking.objects.filter(user=request.user).exists()
+        if is_existed:
+            return HttpResponse('Вы уже записаны на данный курс')
+        else:
+            lessons = Lesson.objects.filter(course=course_id)
+            records = [
+                Tracking(
+                    lesson=lesson,
+                    user=request.user,
+                    passed=False
+                ) for lesson in lessons
+            ]
+            Tracking.objects.bulk_create(records)
+            return HttpResponse('Вы записаны на данный курс')
