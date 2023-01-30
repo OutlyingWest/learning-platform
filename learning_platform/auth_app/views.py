@@ -20,7 +20,10 @@ def login(request):
 def register(request):
     if request.method == 'POST':
         text_data = request.POST
-        file_data = request.FILES
+        if request.FILES:
+            file_data = request.FILES
+        else:
+            file_data = dict(avatar=None)
         user = User(email=text_data['email'],
                     first_name=text_data['first_name'],
                     last_name=text_data['last_name'],
