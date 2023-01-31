@@ -20,15 +20,11 @@ def login(request):
 def register(request):
     if request.method == 'POST':
         text_data = request.POST
-        if request.FILES:
-            file_data = request.FILES
-        else:
-            file_data = dict(avatar=None)
         user = User(email=text_data['email'],
                     first_name=text_data['first_name'],
                     last_name=text_data['last_name'],
                     birthday=text_data['birthday'],
-                    avatar=file_data['avatar'],
+                    avatar=request.FILES.get('avatar'),
                     description=text_data['description'],)
         user.set_password(text_data['password'])
         user.save()
