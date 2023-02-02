@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from datetime import datetime
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Course, Lesson, Tracking
 from .forms import CourseForm
@@ -26,7 +27,15 @@ class CourseCreateView(CreateView):
     form_class = CourseForm
 
     def get_success_url(self):
-        return reverse()
+        return reverse('detail', kwargs={'course_id': self.object.id})
+
+    def form_valid(self, form):
+        # Get object with data from form but not save in database
+        course = form.save(commit=False)
+        course.author = self.request.user
+        course.save()
+        # Return after handle in parent class method "form_valid"
+        return super(CourseCreateView, self).form_valid(form)
 
 
 def delete(request, course_id):
@@ -47,6 +56,35 @@ class CourseDetailView(DetailView):
         context = super(CourseDetailView, self).get_context_data(**kwargs)
         context['lessons'] = Lesson.objects.filter(id=self.kwargs.get('course_id'))
         return context
+
+
+class CourseUpdateView(UpdateView):
+    model = Course
+    form_class = CourseForm
+    template_name = 'create.html'
+    # Redefine name of default url parameter "pk" to "course_id"
+    pk_url_kwarg = 'course_id'
+
+    # Method to get updated Course data
+    def get_queryset(self):
+        return Course.objects.filter(id=self.kwargs.get('course_id'))
+
+    def get_success_url(self):
+        return reverse('detail', kwargs={'course_id': self.object.id})
+
+
+class CourseDeleteView(DeleteView):
+    model = Course
+    template_name = 'delete.html'
+    # Redefine name of default url parameter "pk" to "course_id"
+    pk_url_kwarg = 'course_id'
+
+    # Method to get updated Course data
+    def get_queryset(self):
+        return Course.objects.filter(id=self.kwargs.get('course_id'))
+
+    def get_success_url(self):
+        return reverse('index')
 
 
 def enroll(request, course_id):

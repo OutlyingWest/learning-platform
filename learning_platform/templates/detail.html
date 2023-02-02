@@ -2,7 +2,8 @@
 {% block content %}
     <div class="course_container">
         <div class="course_preview" style="transform: none; box-shadow: none; border: none">
-            <p><a href="{% url 'delete' course.pk %}">Удалить</a></p>
+            <p><a style="color:red" href="{% url 'delete' course.pk %}">Удалить</a></p>
+            <p><a style="color:blue" href="{% url 'update' course.pk %}">Редактировать</a></p>
             <p>{{ course.title }}</p>
             <p>Автор: {{ course.author.last_name }} {{ course.author.first_name }}</p>
             <p>Старт: {{ course.start_date }}</p>

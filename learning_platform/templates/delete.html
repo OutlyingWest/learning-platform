@@ -4,10 +4,9 @@
     <div class="main_container">
         <div class="main_item">
             <form id="form" method="post">
-                <h3>{% block form_name %}Создание курса{% endblock %}</h3>
+                <h3>{% block form_name %}Удаление курса{% endblock %}</h3>
                 {% csrf_token %}
-                {{ form.as_p }}
-                <p><button type="submit">Создать</button></p>
+                <p><button type="submit">Удалить</button></p>
             </form>
         </div>
     </div>
