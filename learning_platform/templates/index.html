@@ -2,13 +2,16 @@
 {% load static %}
 {% block content %}
     <div class="courses_container">
+        {% now 'SHORT_DATETIME_FORMAT' %}
         {% for course in courses %}
             <div class="course_preview">
                 <p><a href="{% url 'detail' course.pk %}">{{ course.title }}</a></p>
-                <p>{{ course.start_date}}</p>
+                <p>{{ course.start_date|date:"j E" }}</p>
                 <p>{{ course.description }}</p>
                 <p><span class="price">{{ course.price }} у.е.</span></p>
             </div>
+        {% empty %}
+        <p>На данный момент не найдено ни одного курса. Зайдите к нам позднее. :)</p>
         {% endfor %}
     </div>
 {% endblock %}
