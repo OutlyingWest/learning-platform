@@ -18,7 +18,7 @@
             </p>
             {% for lesson in lessons %}
                 <p style="font-weight: bold">{{ forloop.counter }}. {{ lesson.name }}</p>
-                <p>{{ lesson.preview }}</p>
+                <p style="margin-left:23px">{{ lesson.preview }}</p>
             {% empty %}
                 <p>Пока не добавлено ни одного урока.</p>
             {% endfor %}
