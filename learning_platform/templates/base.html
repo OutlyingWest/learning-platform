@@ -35,12 +35,14 @@
                         <div>
                             <a href="#">{{ user.last_name }} {{ user.first_name }}</a>
                         </div>
+                        {% comment 'Опции профиля пользователя' %}
                         <div class="submenu_profile" style="display: none;">
                             <div>
                                 <p class="fa fa-sign-out"></p>
                                 <a style="color: rgba(238, 68, 68, 0.93)" href="{% url 'logout' %}">Выход</a>
                             </div>
                         </div>
+                        {% endcomment %}
                     </div>
                     <div>
                         <a href="{% url 'create' %}">Создать курс</a>
