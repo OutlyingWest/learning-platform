@@ -50,11 +50,11 @@ class CourseDetailView(DetailView):
     pk_url_kwarg = 'course_id'
 
     def get_queryset(self):
-        return Course.objects.filter(id=self.kwargs.get('course_id'))
+        return Course.objects.filter(id=self.kwargs.get(self.pk_url_kwarg))
 
     def get_context_data(self, **kwargs):
         context = super(CourseDetailView, self).get_context_data(**kwargs)
-        context['lessons'] = Lesson.objects.filter(id=self.kwargs.get('course_id'))
+        context['lessons'] = Lesson.objects.filter(id=self.kwargs.get(self.pk_url_kwarg))
         return context
 
 
@@ -67,10 +67,10 @@ class CourseUpdateView(UpdateView):
 
     # Method to get updated Course data
     def get_queryset(self):
-        return Course.objects.filter(id=self.kwargs.get('course_id'))
+        return Course.objects.filter(id=self.kwargs.get(self.pk_url_kwarg))
 
     def get_success_url(self):
-        return reverse('detail', kwargs={'course_id': self.object.id})
+        return reverse('detail', kwargs={self.pk_url_kwarg: self.object.id})
 
 
 class CourseDeleteView(DeleteView):
@@ -81,7 +81,7 @@ class CourseDeleteView(DeleteView):
 
     # Method to get updated Course data
     def get_queryset(self):
-        return Course.objects.filter(id=self.kwargs.get('course_id'))
+        return Course.objects.filter(id=self.kwargs.get(self.pk_url_kwarg))
 
     def get_success_url(self):
         return reverse('index')
