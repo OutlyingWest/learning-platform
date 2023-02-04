@@ -13,19 +13,23 @@
             <p><span class="price">{{ course.price }} у.е.</span></p>
         </div>
         <div class="course_preview" style="margin-top: 1%; transform: none; box-shadow: none; border: none;">
+            {% with count_lessons=lessons.count  %}
             <p style="font-weight: bold">
-                Список уроков:<span style="color: rgba(226,175,72,0.73)"> (Всего - {{ lessons.count }})</span>
+                Список уроков:<span style="color: rgba(226,175,72,0.73)"> (Всего - {{ count_lessons }})</span>
             </p>
+            {% endwith %}
             {% for lesson in lessons %}
                 <p style="font-weight: bold">{{ forloop.counter }}. {{ lesson.name }}</p>
                 <p style="margin-left:23px">{{ lesson.preview }}</p>
             {% empty %}
                 <p>Пока не добавлено ни одного урока.</p>
             {% endfor %}
+            {% verbatim %}
             <form method="post" action="{% url 'enroll' course.pk %}">
                 {% csrf_token %}
                 <input type="submit" value="Записаться">
             </form>
+            {% endverbatim %}
         </div>
     </div>
 {% endblock %}
