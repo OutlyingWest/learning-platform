@@ -108,3 +108,6 @@ media/
 **/migrations/**
 !**/migrations
 !**/migrations/__init__.py
+
+# Ignore static app's images
+learning_platform/static/img/
