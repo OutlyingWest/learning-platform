@@ -110,9 +110,9 @@ img {
 #form {
     margin-bottom: 100px;
     height: 105%;
-    padding-right: 15%;
-    padding-left: 4%;
-    padding-bottom: 17%;
+    padding-right: 6%;
+    padding-left: 3%;
+    padding-bottom: 10%;
     border: 2px solid #fa9405;
     border-radius: 40px;
     text-align: left;
@@ -129,6 +129,7 @@ img {
 input, textarea {
     outline: none;
     margin-bottom: 2%;
+    margin-right: 5%;
 }
 #form input, #form textarea {
     width: 92%;
@@ -164,6 +165,16 @@ input, textarea {
 
 #form button:hover {
     background: #fa9405bf;
+}
+
+.main_container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    overflow: auto;
+}
+.main_item {
+    margin: auto;
 }
 
 /* Courses styles */
