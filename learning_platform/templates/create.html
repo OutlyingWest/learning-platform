@@ -3,7 +3,7 @@
 {% block content %}
     <div class="main_container">
         <div class="main_item">
-            <form id="form" method="post">
+            <form id="form_create" method="post">
                 <h3>{% block form_name %}Создание курса{% endblock %}</h3>
                 {% csrf_token %}
                 {{ form.as_p }}

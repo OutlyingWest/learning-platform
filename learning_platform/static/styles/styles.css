@@ -107,17 +107,30 @@ img {
 }
 
 /* Form styles */
-#form {
+#form_create {
     margin-bottom: 100px;
+    padding: 0 4% 12% 5%;
+}
+
+#form_login {
+    padding: 0 17% 20% 5%;
+}
+
+#form_register {
+    padding: 0 7% 15% 3%;
+}
+
+#form_register, #form_login, #form_create {
     height: 105%;
-    padding: 0 6% 3% 10%;
     border: 2px solid #fa9405;
     border-radius: 40px;
     text-align: left;
     font-size: .6em;
     z-index: 22;
 }
-#form h3 {
+
+
+#form_create h3, #form_login h3, #form_register h3{
     font-style: italic;
     text-align: center;
     font-size: 2em;
@@ -129,24 +142,36 @@ input, textarea {
     margin-bottom: 2%;
     margin-right: 5%;
 }
-#form input, #form textarea {
+#form_create input, #form_create textarea,
+#form_login input, #form_login textarea,
+#form_register input, #form_register textarea {
     width: 92%;
     padding: 10px 5px 10px 32px;
     font-size: large;
     font-family: 'Open Sans', sans-serif;
-    border: 5px solid #fa940559;
+    border: 3px solid #fa940559;
     box-sizing: content-box;
     border-radius: 3px;
 }
-#form input:active,
-#form input:focus,
-#form textarea:active,
-#form textarea:focus {
+#form_create input:active,
+#form_create input:focus,
+#form_create textarea:active,
+#form_create textarea:focus
+#form_login input:active,
+#form_login input:focus,
+#form_login textarea:active,
+#form_login textarea:focus
+#form_register input:active,
+#form_register input:focus,
+#form_register textarea:active,
+#form_register textarea:focus{
     border: 1px solid #fa9405;
     background: rgba(238, 236, 240, 0.2);
     box-shadow: 0 1px 4px 0 #fa940559 inset;
 }
-#form button {
+#form_create button,
+#form_login button,
+#form_register button {
     width: 60%;
     float: right;
     cursor: pointer;
@@ -161,7 +186,9 @@ input, textarea {
     transition: all .2s ease-in-out;
 }
 
-#form button:hover {
+#form_create button:hover,
+#form_login button:hover,
+#form_register button:hover {
     background: #fa9405bf;
 }
 
