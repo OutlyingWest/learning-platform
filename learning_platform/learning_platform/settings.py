@@ -120,6 +120,8 @@ USE_I18N = True
 
 USE_TZ = True
 
+SHORT_DATETIME_FORMAT = 'j.m.Y H:I'
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
