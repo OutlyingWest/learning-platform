@@ -2,7 +2,6 @@
 {% load static %}
 {% block content %}
     <div class="courses_container">
-        {% now 'SHORT_DATETIME_FORMAT' %}
         {% for course in courses %}
             <div class="course_preview">
                 <p><a href="{% url 'detail' course.pk %}">{{ course.title|title }}</a></p>

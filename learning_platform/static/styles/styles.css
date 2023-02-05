@@ -110,9 +110,7 @@ img {
 #form {
     margin-bottom: 100px;
     height: 105%;
-    padding-right: 6%;
-    padding-left: 3%;
-    padding-bottom: 10%;
+    padding: 0 6% 3% 10%;
     border: 2px solid #fa9405;
     border-radius: 40px;
     text-align: left;
