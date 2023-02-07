@@ -15,6 +15,10 @@ class Course(models.Model):
         verbose_name_plural = 'Курсы'
         verbose_name = 'Курс'
         ordering = ['title']
+        # Set permissions for model in format: (<codename>, <name>) where field <name> - comment
+        permissions = (
+            ('modify_course', 'Can modify course content'),
+        )
 
     def __str__(self):
         return f'{self.title}: Старт {self.start_date}'
@@ -29,6 +33,9 @@ class Lesson(models.Model):
         verbose_name_plural = 'Уроки'
         verbose_name = 'Урок'
         ordering = ['course']
+        permissions = (
+            ('modify_lesson', 'Can modify lesson content'),
+        )
 
     def __str__(self):
         return f'{self.course}: Урок {self.name}'
