@@ -145,3 +145,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Use custom model instead the default
 AUTH_USER_MODEL = 'auth_app.User'
+
+
+# For authenticate control
+# If user is not logged in, redirect to 'login' url
+LOGIN_URL = 'login'
+# If user authenticate successful, redirect to 'index' url
+LOGIN_REDIRECT_URL = 'index'
+# If user log out, redirect to 'logout' url
+LOGOUT_URL = 'logout'

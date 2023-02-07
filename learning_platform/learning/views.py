@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -87,21 +88,21 @@ class CourseDeleteView(DeleteView):
         return reverse('index')
 
 
+# This decorator check is user authenticate, else redirect to LOGIN_URL
+@login_required
+@permission_required('learning.add_tracking', raise_exception=True)
 def enroll(request, course_id):
-    if request.user.is_anonymous:
-        return redirect('login')
+    is_existed = Tracking.objects.filter(user=request.user).exists()
+    if is_existed:
+        return HttpResponse('Вы уже записаны на данный курс')
     else:
-        is_existed = Tracking.objects.filter(user=request.user).exists()
-        if is_existed:
-            return HttpResponse('Вы уже записаны на данный курс')
-        else:
-            lessons = Lesson.objects.filter(course=course_id)
-            records = [
-                Tracking(
-                    lesson=lesson,
-                    user=request.user,
-                    passed=False
-                ) for lesson in lessons
-            ]
-            Tracking.objects.bulk_create(records)
-            return HttpResponse('Вы записаны на данный курс')
+        lessons = Lesson.objects.filter(course=course_id)
+        records = [
+            Tracking(
+                lesson=lesson,
+                user=request.user,
+                passed=False
+            ) for lesson in lessons
+        ]
+        Tracking.objects.bulk_create(records)
+        return HttpResponse('Вы записаны на данный курс')
