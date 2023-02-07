@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -21,11 +22,13 @@ class MainView(ListView):
         return context
 
 
-class CourseCreateView(CreateView):
+class CourseCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     template_name = 'create.html'
     # Model of course to create
     model = Course
     form_class = CourseForm
+
+    permission_required = ('learning.add_course', )
 
     def get_success_url(self):
         return reverse('detail', kwargs={'course_id': self.object.id})
@@ -37,11 +40,6 @@ class CourseCreateView(CreateView):
         course.save()
         # Return after handle in parent class method "form_valid"
         return super(CourseCreateView, self).form_valid(form)
-
-
-def delete(request, course_id):
-    Course.objects.get(id=course_id).delete()
-    return redirect('index')
 
 
 class CourseDetailView(DetailView):
@@ -59,12 +57,14 @@ class CourseDetailView(DetailView):
         return context
 
 
-class CourseUpdateView(UpdateView):
+class CourseUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Course
     form_class = CourseForm
     template_name = 'create.html'
     # Redefine name of default url parameter "pk" to "course_id"
     pk_url_kwarg = 'course_id'
+
+    permission_required = ('learning.change_course', )
 
     # Method to get updated Course data
     def get_queryset(self):
@@ -74,11 +74,13 @@ class CourseUpdateView(UpdateView):
         return reverse('detail', kwargs={self.pk_url_kwarg: self.object.id})
 
 
-class CourseDeleteView(DeleteView):
+class CourseDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Course
     template_name = 'delete.html'
     # Redefine name of default url parameter "pk" to "course_id"
     pk_url_kwarg = 'course_id'
+
+    permission_required = ('learning.delete_course', )
 
     # Method to get updated Course data
     def get_queryset(self):
@@ -90,6 +92,7 @@ class CourseDeleteView(DeleteView):
 
 # This decorator check is user authenticate, else redirect to LOGIN_URL
 @login_required
+# Permissions can be checked in "auth_permission" table in database
 @permission_required('learning.add_tracking', raise_exception=True)
 def enroll(request, course_id):
     is_existed = Tracking.objects.filter(user=request.user).exists()
