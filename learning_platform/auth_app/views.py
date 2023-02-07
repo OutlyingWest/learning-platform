@@ -1,3 +1,4 @@
+from django.contrib.auth.models import Group
 from django.shortcuts import render, redirect
 from django.contrib import auth
 from django.http import HttpResponse
@@ -28,15 +29,12 @@ def register(request):
                     description=text_data['description'],)
         user.set_password(text_data['password'])
         user.save()
+        pupil = Group.objects.filter(name='Ученик')
+        user.groups.set(pupil)
         auth.login(request, user)
         return redirect('index')
     else:
         return render(request, 'register.html')
-
-
-def logout(request):
-    auth.logout(request)
-    return redirect('login')
 
 
 def change_password(request):
