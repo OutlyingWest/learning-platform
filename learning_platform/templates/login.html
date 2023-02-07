@@ -8,6 +8,7 @@
                 {% csrf_token %}
                 <p><input type="text" maxlength="256" placeholder="Email" name="email" required></p>
                 <p><input type="password" placeholder="Пароль" name="password" minlength="5" required></p>
+                <p><a href="{% url 'password_reset' %}">Забыли пароль?</a></p>
                 <p><button type="submit">Войти</button></p>
             </form>
         </div>
