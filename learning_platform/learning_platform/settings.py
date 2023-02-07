@@ -154,3 +154,9 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'index'
 # If user log out, redirect to 'logout' url
 LOGOUT_URL = 'logout'
+
+# For send email to console on reset password
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# How long reset password link in password_reset_email.html will exist
+PASSWORD_RESET_TIMEOUT_DAYS = 1
