@@ -51,13 +51,10 @@
                 {% else %}
                     <div class="nav-toggle"><span></span></div>
                     <div class="login">
-                        <a href="{% url 'login' %}"></a>
-                    </div>
-                    <div class="register">
                         <a href="{% url 'login' %}" style="color: #000">Вход</a>
                     </div>
                     <div class="register">
-                        <a href="{% url 'register' %}" style="color: #fff"></a>
+                        <a href="{% url 'register' %}" style="color: #fff">Регистрация</a>
                     </div>
                 {% endif %}
             </div>
