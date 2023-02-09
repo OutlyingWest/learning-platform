@@ -160,18 +160,19 @@ input, textarea {
 #form_login input:active,
 #form_login input:focus,
 #form_login textarea:active,
-#form_login textarea:focus
+#form_login textarea:focus,
 #form_register input:active,
 #form_register input:focus,
 #form_register textarea:active,
-#form_register textarea:focus{
+#form_register textarea:focus {
     border: 1px solid #fa9405;
     background: rgba(238, 236, 240, 0.2);
     box-shadow: 0 1px 4px 0 #fa940559 inset;
 }
 #form_create button,
 #form_login button,
-#form_register button {
+#form_register button,
+.single_input {
     width: 60%;
     float: right;
     cursor: pointer;
@@ -188,8 +189,21 @@ input, textarea {
 
 #form_create button:hover,
 #form_login button:hover,
-#form_register button:hover {
+#form_register button:hover,
+.single_input {
     background: #fa9405bf;
+}
+
+.single_input {
+    width: 15%;
+    float: left;
+    margin-left: 39px;
+}
+
+.single_input:hover,
+.single_input:focus {
+    background: rgba(250, 137, 15, 0.76);
+    box-shadow: 0 1px 4px 0 #fa940559 inset;
 }
 
 .main_container {

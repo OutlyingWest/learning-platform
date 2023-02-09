@@ -8,4 +8,5 @@ urlpatterns = [
     path('update/<int:course_id>/', views.CourseUpdateView.as_view(), name='update'),
     re_path('^detail/(?P<course_id>[1-9]+[0-9]*)/$', views.CourseDetailView.as_view(), name='detail'),
     path('enroll/<int:course_id>/', views.enroll, name='enroll'),
+    path('review/<int:course_id>/', views.review, name='review'),
 ]

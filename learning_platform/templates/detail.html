@@ -27,5 +27,13 @@
                 <input type="submit" value="Записаться">
             </form>
         </div>
+        <div class="reviews_container">
+            {% for review in reviews %}
+                {{ review.user.last_name }} {{ review.user.first_name }}
+                {{ review.content }}
+            {% empty %}
+                <p>Отзывов пока нет. Ваша <a href="{% url 'review' course.pk %}">оценка</a> важна для нас!</p>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}
