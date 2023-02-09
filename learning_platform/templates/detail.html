@@ -24,10 +24,10 @@
             {% endfor %}
             <form method="post" action="{% url 'enroll' course.pk %}">
                 {% csrf_token %}
-                <input type="submit" value="Записаться">
+                <input class="single_input" type="submit" value="Записаться">
             </form>
         </div>
-        <div class="reviews_container">
+        <div class="course_preview">
             {% for review in reviews %}
                 {{ review.user.last_name }} {{ review.user.first_name }}
                 {{ review.content }}
