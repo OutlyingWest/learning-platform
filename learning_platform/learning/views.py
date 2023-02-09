@@ -115,6 +115,7 @@ def enroll(request, course_id):
 
 
 @login_required
+@permission_required('learning.add_review', raise_exception=True)
 def review(request, course_id):
     if request.method == 'GET':
         return render(request, 'review.html')

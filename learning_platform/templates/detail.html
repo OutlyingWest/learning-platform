@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
     <div class="course_container">
         <div class="course_preview" style="transform: none; box-shadow: none; border: none">
@@ -27,10 +28,25 @@
                 <input class="single_input" type="submit" value="Записаться">
             </form>
         </div>
-        <div class="course_preview">
+        <div class="reviews_header">
+            <p>
+                Отзывы
+                <span style="font-size: .85em; margin-right: 30px">{{ reviews.count }}</span>
+                <a href="{% url 'review' course.pk %}">Оставить отзыв</a>
+            </p>
+        </div>
+        <div class="reviews_container">
             {% for review in reviews %}
-                {{ review.user.last_name }} {{ review.user.first_name }}
-                {{ review.content }}
+                <div class="review">
+                    {% if review.user.avatar %}
+                        <img src="{{ review.user.avatar.url }}">
+                    {% else %}
+                        <img src="{% static 'avatar.png' %}">
+                    {% endif %}
+                    <p>{{ review.user.last_name }} {{ review.user.first_name }}</p>
+                    <p>{{ review.content }}</p>
+
+                </div>
             {% empty %}
                 <p>Отзывов пока нет. Ваша <a href="{% url 'review' course.pk %}">оценка</a> важна для нас!</p>
             {% endfor %}
