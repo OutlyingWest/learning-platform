@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from datetime import datetime
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Course, Lesson, Tracking
+from .models import Course, Lesson, Tracking, Review
 from .forms import CourseForm
 
 
@@ -53,7 +53,10 @@ class CourseDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(CourseDetailView, self).get_context_data(**kwargs)
-        context['lessons'] = Lesson.objects.filter(id=self.kwargs.get(self.pk_url_kwarg))
+        print(self.pk_url_kwarg)
+        context['lessons'] = Lesson.objects.filter(course=self.kwargs.get(self.pk_url_kwarg))
+        print(context['lessons'])
+        context['reviews'] = Review.objects.filter(course=self.kwargs.get(self.pk_url_kwarg))
         return context
 
 
@@ -109,3 +112,9 @@ def enroll(request, course_id):
         ]
         Tracking.objects.bulk_create(records)
         return HttpResponse('Вы записаны на данный курс')
+
+
+@login_required
+def review(request, course_id):
+    if request.method == 'GET':
+        return render(request, 'review.html')
