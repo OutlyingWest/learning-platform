@@ -6,13 +6,16 @@
             <form id="form_create" method="post">
                 <h3>{% block form_name %}Отзыв о курсе{% endblock %}</h3>
                 {% csrf_token %}
-                <p>
-                    <textarea name="content"
-                              maxlength="250"
-                              placeholder="Ваш отзыв..."
-                              required autofocus>
-                    </textarea>
-                </p>
+                {% if form.errors %}
+                    {% if form.non_field_errors %}
+                        <ul>
+                            {% for error in form.non_field_errors %}
+                                <li><span style="color: red">{{ error }}</span></li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endif %}
+                {{ form.as_p }}
                 <p><button type="submit">Оценить</button></p>
             </form>
         </div>
