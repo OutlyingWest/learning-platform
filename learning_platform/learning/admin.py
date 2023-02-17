@@ -4,7 +4,7 @@ from .models import Course, Lesson, Review
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'start_date', 'description',)
+    list_display = ('title', 'start_date', 'description',)
     list_display_links = ('title', 'start_date', )
     list_editable = ('description', )
     list_per_page = 3
@@ -13,6 +13,8 @@ class CourseAdmin(admin.ModelAdmin):
     actions_on_bottom = True
     actions_selection_counter = True
     save_on_top = True
+    # To pretty display many to many fields of db
+    filter_horizontal = ('authors', )
 
 
 @admin.register(Lesson)
