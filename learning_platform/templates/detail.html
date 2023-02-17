@@ -6,7 +6,19 @@
             <p><a style="color:red" href="{% url 'delete' course.pk %}">Удалить</a></p>
             <p><a style="color:#3179d7" href="{% url 'update' course.pk %}">Редактировать</a></p>
             <p>{{ course.title }}</p>
-            <p>Автор: {{ course.author.last_name }} {{ course.author.first_name }}</p>
+
+            {% with authors=course.authors.all %}
+                {% if authors|length == 1 %}
+                    <p>Автор: {{ authors.0.get_full_name }}</p>
+                {% else %}
+                    <p>Авторы:
+                        {% for author in authors %}
+                            {{ author.get_full_name }}
+                        {% endfor %}
+                    </p>
+                {% endif %}
+            {% endwith %}
+
             <p>Старт: {{ course.start_date }}</p>
             <p>Продолжительность: {{ course.duration }} месяцев/-a</p>
             <p>Количество уроков: {{ course.count_lessons }}</p>

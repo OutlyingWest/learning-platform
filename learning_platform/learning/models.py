@@ -4,7 +4,8 @@ from django.db import models
 
 class Course(models.Model):
     title = models.CharField(verbose_name='Название курса', max_length=30, unique=True)
-    author = models.ForeignKey(verbose_name='Автор курса', to=settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    authors = models.ManyToManyField(verbose_name='Автор курса', to=settings.AUTH_USER_MODEL, db_table='course_authors',
+                                    related_name='authors')
     description = models.TextField(verbose_name='Описание курса', max_length=200)
     start_date = models.DateField(verbose_name='Старт курса')
     duration = models.PositiveIntegerField(verbose_name='Продолжительность')
@@ -25,7 +26,8 @@ class Course(models.Model):
 
 
 class Lesson(models.Model):
-    course = models.ForeignKey(verbose_name='Курс', to=Course, on_delete=models.CASCADE)
+    course = models.ForeignKey(verbose_name='Курс', to=Course, on_delete=models.CASCADE,
+                               related_name='lessons', related_query_name='lesson')
     name = models.CharField(verbose_name='Название урока', max_length=25, unique=True)
     preview = models.TextField(verbose_name='Описание урока', max_length=100)
 
