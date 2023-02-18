@@ -92,6 +92,9 @@ DATABASES = {
         'USER': os.environ.get('USER_DB'),
         'PASSWORD': os.environ.get('PASSWORD_DB'),
         'NAME': 'learning_platform',
+        # Unification db query in one transaction for a controller performing. Effective for multiple queries
+        'ATOMIC_REQUEST': False,
+        'AUTOCOMMIT': False,
     }
 }
 

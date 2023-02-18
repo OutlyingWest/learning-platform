@@ -1,11 +1,12 @@
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.exceptions import NON_FIELD_ERRORS
+from django.db import transaction
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from datetime import datetime
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import Course, Lesson, Tracking, Review
 from .forms import CourseForm, ReviewForm
 
@@ -35,12 +36,13 @@ class CourseCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         return reverse('detail', kwargs={'course_id': self.object.id})
 
     def form_valid(self, form):
-        # Get object with data from form but not save in database
-        course = form.save(commit=False)
-        course.author = self.request.user
-        course.save()
-        # Return after handle in parent class method "form_valid"
-        return super(CourseCreateView, self).form_valid(form)
+        with transaction.atomic():
+            # Get object with data from form but not save in database
+            course = form.save(commit=False)
+            course.author = self.request.user
+            course.save()
+            # Return after handle in parent class method "form_valid"
+            return super(CourseCreateView, self).form_valid(form)
 
 
 class CourseDetailView(ListView):
@@ -55,7 +57,6 @@ class CourseDetailView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(CourseDetailView, self).get_context_data(**kwargs)
-        # context['lessons'] = Lesson.objects.filter(course=self.kwargs.get(self.pk_url_kwarg))
         context['reviews'] = Review.objects.select_related('user').filter(course=self.kwargs.get(self.pk_url_kwarg))
         return context
 
@@ -93,6 +94,7 @@ class CourseDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
         return reverse('index')
 
 
+@transaction.atomic
 # This decorator check is user authenticate, else redirect to LOGIN_URL
 @login_required
 # Permissions can be checked in "auth_permission" table in database
@@ -114,6 +116,7 @@ def enroll(request, course_id):
         return HttpResponse('Вы записаны на данный курс')
 
 
+@transaction.non_atomic_requests
 @login_required
 @permission_required('learning.add_review', raise_exception=True)
 def review(request, course_id):
