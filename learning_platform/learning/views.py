@@ -43,21 +43,20 @@ class CourseCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         return super(CourseCreateView, self).form_valid(form)
 
 
-class CourseDetailView(DetailView):
+class CourseDetailView(ListView):
     template_name = 'detail.html'
-    context_object_name = 'course'
+    # Contains value from get_queryset()
+    context_object_name = 'lessons'
     # Redefine name of default url parameter "pk" to "course_id"
     pk_url_kwarg = 'course_id'
 
     def get_queryset(self):
-        return Course.objects.filter(id=self.kwargs.get(self.pk_url_kwarg))
+        return Lesson.objects.select_related('course').filter(course=self.kwargs.get(self.pk_url_kwarg))
 
     def get_context_data(self, **kwargs):
         context = super(CourseDetailView, self).get_context_data(**kwargs)
-        print(self.pk_url_kwarg)
-        context['lessons'] = Lesson.objects.filter(course=self.kwargs.get(self.pk_url_kwarg))
-        print(context['lessons'])
-        context['reviews'] = Review.objects.filter(course=self.kwargs.get(self.pk_url_kwarg))
+        # context['lessons'] = Lesson.objects.filter(course=self.kwargs.get(self.pk_url_kwarg))
+        context['reviews'] = Review.objects.select_related('user').filter(course=self.kwargs.get(self.pk_url_kwarg))
         return context
 
 
