@@ -8,7 +8,7 @@ from django.urls import reverse
 from datetime import datetime
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import Course, Lesson, Tracking, Review
-from .forms import CourseForm, ReviewForm
+from .forms import CourseForm, ReviewForm, LessonForm
 
 
 class MainView(ListView):
@@ -114,6 +114,18 @@ def enroll(request, course_id):
         ]
         Tracking.objects.bulk_create(records)
         return HttpResponse('Вы записаны на данный курс')
+
+
+class LessonCreateView(CreateView):
+    model = Lesson
+    form_class = LessonForm
+    template_name = 'create_lesson.html'
+    pk_url_kwarg = 'course_id'
+
+    permission_required = ('learning.add_lesson', )
+
+    def get_success_url(self):
+        return reverse('detail', kwargs={self.pk_url_kwarg: self.kwargs.get(self.pk_url_kwarg)})
 
 
 @transaction.non_atomic_requests

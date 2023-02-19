@@ -6,6 +6,7 @@
             <div class="course_preview" style="transform: none; box-shadow: none; border: none">
                 <p><a style="color:red" href="{% url 'delete' course_var.course.pk %}">Удалить</a></p>
                 <p><a style="color:#3179d7" href="{% url 'update' course_var.course.pk %}">Редактировать</a></p>
+                <p><a style="color:#37c024" href="{% url 'create_lesson' course_var.course.pk %}">Создать урок</a></p>
                 <p>{{ course_var.course.title }}</p>
 
                 {% with authors=course_var.course.authors.all %}

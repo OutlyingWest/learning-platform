@@ -94,7 +94,7 @@ DATABASES = {
         'NAME': 'learning_platform',
         # Unification db query in one transaction for a controller performing. Effective for multiple queries
         'ATOMIC_REQUEST': False,
-        'AUTOCOMMIT': False,
+        'AUTOCOMMIT': True,
     }
 }
 
