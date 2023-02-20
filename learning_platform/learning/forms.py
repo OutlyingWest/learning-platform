@@ -25,6 +25,9 @@ class LessonForm(forms.ModelForm):
         'cols': 50,
     }), label='')
 
+    error_css_class = 'error_field'
+    required_css_class = 'required_field'
+
     class Meta:
         model = Lesson
         fields = ('name', 'preview', )
