@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+
+    <form id="form_create" method="get">
+        {{ form }}
+        <p><button type="submit">Искать</button></p>
+    </form>
+
     <div class="courses_container">
         {% for course in courses %}
             <div class="course_preview">

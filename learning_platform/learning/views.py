@@ -2,26 +2,47 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.db import transaction
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from datetime import datetime
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, FormView
 from .models import Course, Lesson, Tracking, Review
-from .forms import CourseForm, ReviewForm, LessonForm
+from .forms import CourseForm, ReviewForm, LessonForm, OrderByAndSearchForm
 
 
-class MainView(ListView):
+class MainView(ListView, FormView):
     template_name = 'index.html'
     queryset = Course.objects.all()
     context_object_name = 'courses'
 
-    paginate_by = 3
+    form_class = OrderByAndSearchForm
+
+    paginate_by = 6
+
+    def get_queryset(self):
+        queryset = MainView.queryset
+        if {'search', 'price_order'} != self.request.GET.keys():
+            return queryset
+        else:
+            search_query = self.request.GET.get('search')
+            price_order_by = self.request.GET.get('price_order')
+            query_filter = Q(title__icontains=search_query) | Q(description__icontains=search_query)
+            queryset = queryset.filter(query_filter).order_by(price_order_by)
+            return queryset
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(MainView, self).get_context_data(**kwargs)
         context['current_year'] = datetime.now().year
         return context
+
+    def get_initial(self):
+        """ For don't forget search forms fields """
+        initial = super(MainView, self).get_initial()
+        initial['search'] = self.request.GET.get('search', '')
+        initial['price_order'] = self.request.GET.get('price_order', 'title')
+        return initial
 
 
 class CourseCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
