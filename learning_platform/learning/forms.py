@@ -19,26 +19,22 @@ class ReviewForm(forms.ModelForm):
 
 
 class LessonForm(forms.ModelForm):
-    preview = forms.CharField(widget=Textarea(attrs={
-        'placeholder': 'Опишите содержание урока.',
-        'rows': 20,
-        'cols': 50,
-    }), label='')
+    course = forms.ModelChoiceField(queryset=Course.objects.all())
 
     error_css_class = 'error_field'
     required_css_class = 'required_field'
 
     class Meta:
         model = Lesson
-        fields = ('name', 'preview', )
-        labels = {'name': '', 'preview': '', }
+        fields = ('course', 'name', 'preview', )
+        labels = {'course': '', 'name': '', 'preview': '', }
         widgets = {
             'name': TextInput(attrs={'placeholder': 'Введите название урока.'}),
             'preview': Textarea(attrs={
                                         'placeholder': 'Опишите содержание урока.',
                                         'rows': 20,
                                         'cols': 50,
-            })
+            }),
         }
         help_texts = {'preview': 'Описание не должно быть пустым'}
 

@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from datetime import datetime
+from django import forms
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, FormView
 from .models import Course, Lesson, Tracking, Review
 from .forms import CourseForm, ReviewForm, LessonForm, OrderByAndSearchForm
@@ -45,7 +46,7 @@ class MainView(ListView, FormView):
         return initial
 
 
-class CourseCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class CourseCreateView(CreateView, LoginRequiredMixin, PermissionRequiredMixin):
     template_name = 'create.html'
     # Model of course to create
     model = Course
@@ -82,7 +83,7 @@ class CourseDetailView(ListView):
         return context
 
 
-class CourseUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class CourseUpdateView(UpdateView, LoginRequiredMixin, PermissionRequiredMixin):
     model = Course
     form_class = CourseForm
     template_name = 'create.html'
@@ -99,7 +100,7 @@ class CourseUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
         return reverse('detail', kwargs={self.pk_url_kwarg: self.object.id})
 
 
-class CourseDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+class CourseDeleteView(DeleteView, LoginRequiredMixin, PermissionRequiredMixin):
     model = Course
     template_name = 'delete.html'
     # Redefine name of default url parameter "pk" to "course_id"
@@ -137,7 +138,7 @@ def enroll(request, course_id):
         return HttpResponse('Вы записаны на данный курс')
 
 
-class LessonCreateView(CreateView):
+class LessonCreateView(CreateView, LoginRequiredMixin, PermissionRequiredMixin):
     model = Lesson
     form_class = LessonForm
     template_name = 'create_lesson.html'
@@ -145,10 +146,13 @@ class LessonCreateView(CreateView):
 
     permission_required = ('learning.add_lesson', )
 
-    def get_context_data(self, **kwargs):
-        context = super(LessonCreateView, self).get_context_data(**kwargs)
-        context['course'] = Course.objects.get(id=self.kwargs.get(self.pk_url_kwarg))
-        return context
+    def get_form(self, form_class=None):
+        form = super(LessonCreateView, self).get_form()
+        course_queryset = Course.objects.filter(authors=self.request.user)
+        form.fields['course'] = forms.ModelChoiceField(queryset=course_queryset, label='Курс',
+                                                       initial={'title': course_queryset[0].title})
+
+        return form
 
     def get_success_url(self):
         return reverse('detail', kwargs={self.pk_url_kwarg: self.kwargs.get(self.pk_url_kwarg)})
