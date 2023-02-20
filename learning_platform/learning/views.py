@@ -120,7 +120,6 @@ class LessonCreateView(CreateView):
     model = Lesson
     form_class = LessonForm
     template_name = 'create_lesson.html'
-    # context_object_name = 'course'
     pk_url_kwarg = 'course_id'
 
     permission_required = ('learning.add_lesson', )

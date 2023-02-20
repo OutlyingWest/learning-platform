@@ -19,9 +19,6 @@ class ReviewForm(forms.ModelForm):
 
 
 class LessonForm(forms.ModelForm):
-    # course = forms.ModelChoiceField(label='Курс')
-    # course = forms.ModelChoiceField(queryset=Course.objects.all(), empty_label='Выберите курс', required=True,
-    #                                 label='Kурс', help_text='Укажите курс, к которому вы хотите добавить урок')
     preview = forms.CharField(widget=Textarea(attrs={
         'placeholder': 'Опишите содержание урока.',
         'rows': 20,

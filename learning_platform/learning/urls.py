@@ -9,5 +9,5 @@ urlpatterns = [
     re_path('^detail/(?P<course_id>[1-9]+[0-9]*)/$', views.CourseDetailView.as_view(), name='detail'),
     path('enroll/<int:course_id>/', views.enroll, name='enroll'),
     path('review/<int:course_id>/', views.review, name='review'),
-    path('create_lesson/<int:course_id>/', views.LessonCreateView.as_view(), name='create_lesson'),
+    path('<int:course_id>/create_lesson/', views.LessonCreateView.as_view(), name='create_lesson'),
 ]
