@@ -1,4 +1,4 @@
-from django.contrib.auth.views import (LoginView, LogoutView,
+from django.contrib.auth.views import (LogoutView,
                                        PasswordResetView, PasswordResetDoneView,
                                        PasswordResetConfirmView, PasswordResetCompleteView,
                                        PasswordChangeView, PasswordChangeDoneView)
@@ -6,8 +6,9 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('login/', views.login, name='login'),
-    path('register/', views.register, name='register'),
+    # Controllers for users management
+    path('login/', views.UserLoginView.as_view(), name='login'),
+    path('register/', views.UserRegisterView.as_view(), name='register'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     # Controllers for change password
     path('password_change/', PasswordChangeView.as_view(), name='password_change'),

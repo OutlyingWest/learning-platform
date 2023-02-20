@@ -6,8 +6,7 @@
             <form id="form_login" method="post">
                 <h3>{% block form_name %}Вход{% endblock %}</h3>
                 {% csrf_token %}
-                <p><input type="text" maxlength="256" placeholder="Email" name="email" required></p>
-                <p><input type="password" placeholder="Пароль" name="password" minlength="5" required></p>
+                {{ form.as_p }}
                 <p><a href="{% url 'password_reset' %}">Забыли пароль?</a></p>
                 <p><button type="submit">Войти</button></p>
             </form>

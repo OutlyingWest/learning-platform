@@ -6,13 +6,7 @@
             <form id="form_register" method="post" enctype="multipart/form-data">
                 <h3>{% block form_name %}Регистрация{% endblock %}</h3>
                 {% csrf_token %}
-                <p><input type="email" maxlength="256" placeholder="Email" name="email" required autofocus></p>
-                <p><input type="text" placeholder="Фамилия" name="last_name" required></p>
-                <p><input type="text" placeholder="Имя" name="first_name" required></p>
-                <p><input type="date" placeholder="Дата рождения" name="birthday"></p>
-                <p><textarea placeholder="Описание профиля" name="description" maxlength="200" required></textarea></p>
-                <p><input type="file" placeholder="Аватар" name="avatar"></p>
-                <p><input type="password" placeholder="Пароль" name="password" minlength="5"></p>
+                {{ form.as_p }}
                 <p><button type="submit">Зарегистрироваться</button></p>
             </form>
         </div>
