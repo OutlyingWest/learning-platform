@@ -5,6 +5,7 @@
         <div class="main_item">
             <form id="form_create" method="post">
                 <h3>{% block form_name %}Создание урока{% endblock %}</h3>
+                <p>Курс: {{ course.title }}</p>
                 {% csrf_token %}
                 {{ form.as_p }}
                 <p><button type="submit">Создать</button></p>

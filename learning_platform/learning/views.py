@@ -120,9 +120,15 @@ class LessonCreateView(CreateView):
     model = Lesson
     form_class = LessonForm
     template_name = 'create_lesson.html'
+    # context_object_name = 'course'
     pk_url_kwarg = 'course_id'
 
     permission_required = ('learning.add_lesson', )
+
+    def get_context_data(self, **kwargs):
+        context = super(LessonCreateView, self).get_context_data(**kwargs)
+        context['course'] = Course.objects.get(id=self.kwargs.get(self.pk_url_kwarg))
+        return context
 
     def get_success_url(self):
         return reverse('detail', kwargs={self.pk_url_kwarg: self.kwargs.get(self.pk_url_kwarg)})
