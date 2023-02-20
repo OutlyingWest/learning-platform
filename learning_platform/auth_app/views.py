@@ -1,11 +1,10 @@
 from django.contrib.auth.models import Group
 from django.contrib.auth.views import LoginView
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.contrib import auth
 from django.http import HttpResponse
 from django.views.generic.edit import CreateView
 from .forms import LoginForm, RegisterForm
-from .models import User
 
 
 class UserLoginView(LoginView):
