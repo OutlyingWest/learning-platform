@@ -46,7 +46,7 @@ class MainView(ListView, FormView):
         return initial
 
 
-class CourseCreateView(CreateView, LoginRequiredMixin, PermissionRequiredMixin):
+class CourseCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     template_name = 'create.html'
     # Model of course to create
     model = Course
@@ -83,7 +83,7 @@ class CourseDetailView(ListView):
         return context
 
 
-class CourseUpdateView(UpdateView, LoginRequiredMixin, PermissionRequiredMixin):
+class CourseUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Course
     form_class = CourseForm
     template_name = 'create.html'
@@ -100,7 +100,7 @@ class CourseUpdateView(UpdateView, LoginRequiredMixin, PermissionRequiredMixin):
         return reverse('detail', kwargs={self.pk_url_kwarg: self.object.id})
 
 
-class CourseDeleteView(DeleteView, LoginRequiredMixin, PermissionRequiredMixin):
+class CourseDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Course
     template_name = 'delete.html'
     # Redefine name of default url parameter "pk" to "course_id"
@@ -138,7 +138,7 @@ def enroll(request, course_id):
         return HttpResponse('Вы записаны на данный курс')
 
 
-class LessonCreateView(CreateView, LoginRequiredMixin, PermissionRequiredMixin):
+class LessonCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Lesson
     form_class = LessonForm
     template_name = 'create_lesson.html'
