@@ -19,8 +19,6 @@ class ReviewForm(forms.ModelForm):
 
 
 class LessonForm(forms.ModelForm):
-    course = forms.ModelChoiceField(queryset=Course.objects.all())
-
     error_css_class = 'error_field'
     required_css_class = 'required_field'
 
