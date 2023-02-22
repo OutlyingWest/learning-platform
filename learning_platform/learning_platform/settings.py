@@ -77,7 +77,9 @@ SESSION_COOKIE_SECURE = True
 # Sending cookies to other sites. 'Strict' - forbid it. (None by default)
 SESSION_COOKIE_SAMESITE = 'Strict'
 
-
+# Custom session settings for remember user after login
+REMEMBER_KEY = 'is_remember'
+REMEMBER_AGE = 60 * 60 * 24 * 365  # 1 year
 
 TEMPLATES = [
     {

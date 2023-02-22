@@ -1,5 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import User
+from django import forms
 
 
 class RegisterForm(UserCreationForm):
@@ -10,6 +11,7 @@ class RegisterForm(UserCreationForm):
 
 
 class LoginForm(AuthenticationForm):
+    is_remember = forms.BooleanField(label='Запомнить', label_suffix='?', required=False)
 
     class Meta:
         model = User
