@@ -64,9 +64,19 @@ ROOT_URLCONF = 'learning_platform.urls'
 
 # Session settings
 
-# Set sessions storing in file
-SESSION_ENGINE = 'django.contrib.sessions.backends.file'
-SESSION_FILE_PATH = BASE_DIR / 'session'
+# Set sessions storing in file (db by default)
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+# It breaks the session not in all browsers
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+# Cookie lifetime in seconds (1209600 s. = 2 weeks by default)
+SESSION_COOKIE_AGE = 30
+# If False session saves only when it changes (False by default)
+SESSION_SAVE_EVERY_REQUEST = False
+# If True - cookie access only through https
+SESSION_COOKIE_SECURE = True
+# Sending cookies to other sites. 'Strict' - forbid it. (None by default)
+SESSION_COOKIE_SAMESITE = 'Strict'
+
 
 
 TEMPLATES = [

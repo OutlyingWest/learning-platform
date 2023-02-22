@@ -74,6 +74,17 @@ class CourseDetailView(ListView):
     # Redefine name of default url parameter "pk" to "course_id"
     pk_url_kwarg = 'course_id'
 
+    def get(self, request, *args, **kwargs):
+        """ Allows to get data about page views """
+        views: dict = request.session.setdefault('views', {})
+        course_id = str(kwargs[CourseDetailView.pk_url_kwarg])
+        count = views.get(course_id, 0)
+        views[course_id] = count + 1
+        request.session['views'] = views
+        # Send cookies in every request
+        request.session.modified = True
+        return super(CourseDetailView, self).get(request, *args, **kwargs)
+
     def get_queryset(self):
         return Lesson.objects.select_related('course').filter(course=self.kwargs.get(self.pk_url_kwarg))
 
