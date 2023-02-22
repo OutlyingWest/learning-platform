@@ -61,6 +61,14 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'learning_platform.urls'
 
+
+# Session settings
+
+# Set sessions storing in file
+SESSION_ENGINE = 'django.contrib.sessions.backends.file'
+SESSION_FILE_PATH = BASE_DIR / 'session'
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
