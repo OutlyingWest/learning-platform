@@ -162,7 +162,6 @@ class LessonCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         course_queryset = Course.objects.filter(authors=self.request.user)
         form.fields['course'] = forms.ModelChoiceField(queryset=course_queryset, label='Курс',
                                                        initial={'title': course_queryset[0].title})
-
         return form
 
     def get_success_url(self):
@@ -188,3 +187,19 @@ def review(request, course_id):
     else:
         form = ReviewForm()
         return render(request, 'review.html', {'form': form})
+
+
+def add_course_to_favorites(request, course_id):
+    if request.method == 'POST':
+        favorites: list = request.session.get('favorites', list())
+        favorites.append(course_id)
+        request.session['favorites'] = favorites
+        request.session.modified = True
+    return redirect(reverse('index'))
+
+
+def remove_course_from_favorites(request, course_id):
+    if request.method == 'POST':
+        request.session.get('favorites').remove(course_id)
+        request.session.modified = True
+    return redirect(reverse('index'))

@@ -129,7 +129,6 @@ img {
     z-index: 22;
 }
 
-
 #form_create h3, #form_login h3, #form_register h3{
     font-style: italic;
     text-align: center;
@@ -137,6 +136,18 @@ img {
     color: #fa9405;
     margin-bottom: 2%;
 }
+
+.favorite_container {
+    float: right;
+    width: 30%;
+}
+#favorite_form button {
+    outline: none;
+    background: white;
+    border: none;
+    box-shadow: none;
+}
+
 input, textarea {
     outline: none;
     margin-bottom: 2%;

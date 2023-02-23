@@ -10,4 +10,7 @@ urlpatterns = [
     path('enroll/<int:course_id>/', views.enroll, name='enroll'),
     path('review/<int:course_id>/', views.review, name='review'),
     path('<int:course_id>/create_lesson/', views.LessonCreateView.as_view(), name='create_lesson'),
+    # Session work paths
+    path('add_favorite/<int:course_id>/', views.add_course_to_favorites, name='add_favorite'),
+    path('remove_favorite/<int:course_id>/', views.remove_course_from_favorites, name='remove_favorite'),
 ]
