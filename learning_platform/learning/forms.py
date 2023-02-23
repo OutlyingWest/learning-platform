@@ -56,3 +56,9 @@ class OrderByAndSearchForm(forms.Form):
                              widget=TextInput(attrs={'placeholder': 'Введите запрос'}))
 
     price_order = forms.ChoiceField(label='', choices=PRICE_CHOICES, initial=PRICE_CHOICES[0])
+
+
+class SettingsForm(forms.Form):
+    """ User's settings form """
+    paginate_by = forms.IntegerField(label='Запсей на одной странице', label_suffix=':',
+                                     min_value=2, max_value=20, initial=4)

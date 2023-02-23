@@ -3,14 +3,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.db import transaction
 from django.db.models import Q
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from datetime import datetime
 from django import forms
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, FormView
 from .models import Course, Lesson, Tracking, Review
-from .forms import CourseForm, ReviewForm, LessonForm, OrderByAndSearchForm
+from .forms import CourseForm, ReviewForm, LessonForm, OrderByAndSearchForm, SettingsForm
 
 
 class MainView(ListView, FormView):
@@ -44,6 +44,13 @@ class MainView(ListView, FormView):
         initial['search'] = self.request.GET.get('search', '')
         initial['price_order'] = self.request.GET.get('price_order', 'title')
         return initial
+
+    def get_paginate_by(self, queryset):
+        """
+        After implementation of this method "page_obj"
+        variable will be added to index.html template
+        """
+        return self.request.COOKIES.get('paginate_by', 4)
 
 
 class CourseCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -211,3 +218,23 @@ class FavoriteCoursesView(MainView):
         queryset = super(FavoriteCoursesView, self).get_queryset()
         favorites_ids = self.request.session.get('favorites', list())
         return queryset.filter(id__in=favorites_ids)
+
+
+class SettingsFormView(FormView):
+    form_class = SettingsForm
+    template_name = 'settings.html'
+
+    def post(self, request, *args, **kwargs):
+        paginate_by = request.POST.get('paginate_by')
+        cookies_max_age = 60 * 60 * 24 * 365  # 1 year
+        # Allow to redirect after cookie set
+        response = HttpResponseRedirect(reverse('index'), 'Настройки успешно сохранены!')
+        response.set_cookie('paginate_by', value=paginate_by, secure=False, httponly=False,
+                            samesite='Lax', max_age=cookies_max_age)
+        return response
+
+    def get_initial(self):
+        """ For display previously set settings """
+        initial = super(SettingsFormView, self).get_initial()
+        initial['paginate_by'] = self.request.COOKIES.get('paginate_by', 4)
+        return initial

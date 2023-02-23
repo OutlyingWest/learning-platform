@@ -39,7 +39,22 @@
                 <p><span class="price">{{ course.price|default:"Бесплатно" }} у.е.</span></p>
             </div>
         {% empty %}
-        <p>На данный момент не найдено ни одного курса. Зайдите к нам позднее. :)</p>
+            <p>На данный момент не найдено ни одного курса. Зайдите к нам позднее. :)</p>
         {% endfor %}
+    </div>
+    <div class="pagination_container">
+        <div class="pagination">
+            <span>
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; К первой</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">Назад</a>
+                {% endif %}
+                <span>Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }} </span>
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">Вперед</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">В конец &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
     </div>
 {% endblock %}

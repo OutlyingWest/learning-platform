@@ -319,3 +319,20 @@ footer {
 .copyright-mark img {
     width: 7%;
 }
+
+/* Pagination styles */
+
+.pagination_container {
+    width: 100%;
+    position: fixed;
+    bottom: 100px;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    overflow: auto;
+}
+
+.pagination {
+    font-size: .8em;
+}
