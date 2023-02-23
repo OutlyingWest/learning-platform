@@ -13,4 +13,5 @@ urlpatterns = [
     # Session work paths
     path('add_favorite/<int:course_id>/', views.add_course_to_favorites, name='add_favorite'),
     path('remove_favorite/<int:course_id>/', views.remove_course_from_favorites, name='remove_favorite'),
+    path('favorites/', views.FavoriteCoursesView.as_view(), name='favorites'),
 ]

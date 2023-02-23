@@ -26,7 +26,7 @@
                     <div class="favorite_container">
                         <form id="favorite_form"
                               method="post"
-                              action="{% url 'add_favorite' course.pk %}"
+                              action="{% url 'remove_favorite' course.pk %}"
                               title="Принять участие">
                             {% csrf_token %}
                             <button type="submit" class="fa fa-check" style="color: green"></button>

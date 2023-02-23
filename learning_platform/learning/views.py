@@ -203,3 +203,11 @@ def remove_course_from_favorites(request, course_id):
         request.session.get('favorites').remove(course_id)
         request.session.modified = True
     return redirect(reverse('index'))
+
+
+class FavoriteCoursesView(MainView):
+    """ Class allow to view and search only favorite courses """
+    def get_queryset(self):
+        queryset = super(FavoriteCoursesView, self).get_queryset()
+        favorites_ids = self.request.session.get('favorites', list())
+        return queryset.filter(id__in=favorites_ids)

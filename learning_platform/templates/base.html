@@ -37,11 +37,22 @@
                         </div>
                         <div class="submenu_profile" style="display: none;">
                             <div>
-                                <p class="fa fa-sign-out"></p>
-                                <a style="color:rgba(33,73,173,0.69)" href="{% url 'password_change' %}">
-                                    Изменить пароль
-                                </a>
-                                <a style="color: rgba(238, 68, 68, 0.93)" href="{% url 'logout' %}">Выход</a>
+                                <p>
+                                    <a style="color:rgba(33,73,173,0.69)"
+                                       class="fa fa-heart"
+                                       href="{% url 'favorites' %}">
+                                        Избранное
+                                    </a>
+                                </p>
+                                <p>
+                                    <a style="color:rgba(33,73,173,0.69)"
+                                       href="{% url 'password_change' %}">
+                                        Изменить пароль
+                                    </a>
+                                </p>
+                                <p class="fa fa-sign-out">
+                                    <a style="color: rgba(238, 68, 68, 0.93)" href="{% url 'logout' %}">Выход</a>
+                                </p>
                             </div>
                         </div>
                     </div>
