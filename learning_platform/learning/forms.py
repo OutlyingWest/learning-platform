@@ -2,6 +2,8 @@ from .models import Course, Review, Lesson
 from django import forms
 from django.forms.widgets import Textarea, TextInput
 from django.core.exceptions import ValidationError
+from django.conf import settings
+
 
 
 class CourseForm(forms.ModelForm):
@@ -61,4 +63,4 @@ class OrderByAndSearchForm(forms.Form):
 class SettingsForm(forms.Form):
     """ User's settings form """
     paginate_by = forms.IntegerField(label='Запсей на одной странице', label_suffix=':',
-                                     min_value=2, max_value=20, initial=4)
+                                     min_value=2, max_value=20, initial=settings.DEFAULT_COURSES_ON_PAGE)

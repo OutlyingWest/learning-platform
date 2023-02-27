@@ -5,6 +5,7 @@ from django.db import transaction
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
+from django.conf import settings
 from django.urls import reverse
 from datetime import datetime
 from django import forms
@@ -50,7 +51,7 @@ class MainView(ListView, FormView):
         After implementation of this method "page_obj"
         variable will be added to index.html template
         """
-        return self.request.COOKIES.get('paginate_by', 4)
+        return self.request.COOKIES.get('paginate_by', settings.DEFAULT_COURSES_ON_PAGE)
 
 
 class CourseCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -226,7 +227,7 @@ class SettingsFormView(FormView):
 
     def post(self, request, *args, **kwargs):
         paginate_by = request.POST.get('paginate_by')
-        cookies_max_age = 60 * 60 * 24 * 365  # 1 year
+        cookies_max_age = settings.COOKIES_REMEMBER_AGE
         # Allow to redirect after cookie set
         response = HttpResponseRedirect(reverse('index'), 'Настройки успешно сохранены!')
         response.set_cookie('paginate_by', value=paginate_by, secure=False, httponly=False,
@@ -236,5 +237,5 @@ class SettingsFormView(FormView):
     def get_initial(self):
         """ For display previously set settings """
         initial = super(SettingsFormView, self).get_initial()
-        initial['paginate_by'] = self.request.COOKIES.get('paginate_by', 4)
+        initial['paginate_by'] = self.request.COOKIES.get('paginate_by', settings.DEFAULT_COURSES_ON_PAGE)
         return initial

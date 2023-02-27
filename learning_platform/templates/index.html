@@ -11,29 +11,29 @@
         {% for course in courses %}
             <div class="course_preview">
                 <p><a href="{% url 'detail' course.pk %}">{{ course.title|title }}</a></p>
-
-                {% if not course.pk in request.session.favorites or not request.session.favorites %}
-                    <div class="favorite_container">
-                        <form id="favorite_form"
-                              method="post"
-                              action="{% url 'add_favorite' course.pk %}"
-                              title="Принять участие">
-                            {% csrf_token %}
-                            <button type="submit" class="fa fa-plus" style="color: #fa9405"></button>
-                        </form>
-                    </div>
-                {% else %}
-                    <div class="favorite_container">
-                        <form id="favorite_form"
-                              method="post"
-                              action="{% url 'remove_favorite' course.pk %}"
-                              title="Принять участие">
-                            {% csrf_token %}
-                            <button type="submit" class="fa fa-check" style="color: green"></button>
-                        </form>
-                    </div>
-                {% endif %}
-
+                {% with favorite_courses=request.session.favorites %}
+                    {% if not course.pk in favorite_courses or not favorite_courses %}
+                        <div class="favorite_container">
+                            <form id="favorite_form"
+                                  method="post"
+                                  action="{% url 'add_favorite' course.pk %}"
+                                  title="Принять участие">
+                                {% csrf_token %}
+                                <button type="submit" class="fa fa-plus" style="color: #fa9405"></button>
+                            </form>
+                        </div>
+                    {% else %}
+                        <div class="favorite_container">
+                            <form id="favorite_form"
+                                  method="post"
+                                  action="{% url 'remove_favorite' course.pk %}"
+                                  title="Принять участие">
+                                {% csrf_token %}
+                                <button type="submit" class="fa fa-check" style="color: green"></button>
+                            </form>
+                        </div>
+                    {% endif %}
+                {% endwith %}
                 <p>{{ course.start_date|date:"j E" }}</p>
                 <p>{{ course.description|capfirst }}</p>
                 <p><span class="price">{{ course.price|default:"Бесплатно" }} у.е.</span></p>

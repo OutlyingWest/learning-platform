@@ -79,7 +79,12 @@ SESSION_COOKIE_SAMESITE = 'Strict'
 
 # Custom session settings for remember user after login
 REMEMBER_KEY = 'is_remember'
-REMEMBER_AGE = 60 * 60 * 24 * 365  # 1 year
+SESSION_REMEMBER_AGE = 60 * 60 * 24 * 365  # 1 year
+
+# Custom cookies settings
+COOKIES_REMEMBER_AGE = 60 * 60 * 24 * 365  # 1 year
+
+
 
 TEMPLATES = [
     {
@@ -189,3 +194,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # How long reset password link in password_reset_email.html will exist
 PASSWORD_RESET_TIMEOUT_DAYS = 1
+
+# Pagination of main page settings
+DEFAULT_COURSES_ON_PAGE = 4
