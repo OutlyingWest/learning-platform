@@ -5,7 +5,7 @@ from  django.dispatch import receiver
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def grant_user_rights(sender, instance, created=True, **kwargs)
+def grant_user_rights(sender, instance, created=True, **kwargs):
     if created:
         pupil = Group.objects.filter(name='Ученик')
         instance.groups.set(pupil)

@@ -84,8 +84,6 @@ SESSION_REMEMBER_AGE = 60 * 60 * 24 * 365  # 1 year
 # Custom cookies settings
 COOKIES_REMEMBER_AGE = 60 * 60 * 24 * 365  # 1 year
 
-
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
