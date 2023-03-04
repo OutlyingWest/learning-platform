@@ -1,5 +1,9 @@
 from django.db.models.signals import pre_save
+from django.dispatch import Signal
 from .models import Course, Lesson
+
+
+set_views = Signal()
 
 
 def check_quantity(sender, instance, **kwargs):
@@ -14,4 +18,17 @@ def check_quantity(sender, instance, **kwargs):
     return error
 
 
+def increment_views(sender, **kwargs):
+    """ Perform getting data about page views """
+    session = kwargs['session']
+    views: dict = session.setdefault('views', {})
+    course_id = str(kwargs['id'])
+    count = views.get(course_id, 0)
+    views[course_id] = count + 1
+    session['views'] = views
+    # Send cookies in every request
+    session.modified = True
+
+
 pre_save.connect(check_quantity, sender=Lesson)
+set_views.connect(increment_views, )

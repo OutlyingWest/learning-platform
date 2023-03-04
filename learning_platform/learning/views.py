@@ -13,6 +13,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView, F
 from .models import Course, Lesson, Tracking, Review
 from .forms import CourseForm, ReviewForm, LessonForm, OrderByAndSearchForm, SettingsForm
 from django.db.models.signals import pre_save
+from .signals import set_views
 
 
 class MainView(ListView, FormView):
@@ -85,13 +86,10 @@ class CourseDetailView(ListView):
 
     def get(self, request, *args, **kwargs):
         """ Allows to get data about page views """
-        views: dict = request.session.setdefault('views', {})
-        course_id = str(kwargs[CourseDetailView.pk_url_kwarg])
-        count = views.get(course_id, 0)
-        views[course_id] = count + 1
-        request.session['views'] = views
-        # Send cookies in every request
-        request.session.modified = True
+        set_views.send(self.__class__,
+                       session=request.session,
+                       pk_url_kwarg=self.pk_url_kwarg,
+                       id=kwargs[self.pk_url_kwarg])
         return super(CourseDetailView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
