@@ -12,6 +12,8 @@ from django import forms
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, FormView
 from .models import Course, Lesson, Tracking, Review
 from .forms import CourseForm, ReviewForm, LessonForm, OrderByAndSearchForm, SettingsForm
+from django.db.models.signals import pre_save
+from .signals import set_views
 
 
 class MainView(ListView, FormView):
@@ -84,13 +86,10 @@ class CourseDetailView(ListView):
 
     def get(self, request, *args, **kwargs):
         """ Allows to get data about page views """
-        views: dict = request.session.setdefault('views', {})
-        course_id = str(kwargs[CourseDetailView.pk_url_kwarg])
-        count = views.get(course_id, 0)
-        views[course_id] = count + 1
-        request.session['views'] = views
-        # Send cookies in every request
-        request.session.modified = True
+        set_views.send(self.__class__,
+                       session=request.session,
+                       pk_url_kwarg=self.pk_url_kwarg,
+                       id=kwargs[self.pk_url_kwarg])
         return super(CourseDetailView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
@@ -164,6 +163,15 @@ class LessonCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     pk_url_kwarg = 'course_id'
 
     permission_required = ('learning.add_lesson', )
+
+    def form_valid(self, form):
+        error = pre_save.send(sender=LessonCreateView.model, instance=form.save(commit=False))
+        print(error)
+        if error[0][1]:
+            form.errors[NON_FIELD_ERRORS] = [error[0][1]]
+            return super(LessonCreateView, self).form_invalid(form)
+        else:
+            return super(LessonCreateView, self).form_valid(form)
 
     def get_form(self, form_class=None):
         form = super(LessonCreateView, self).get_form()
