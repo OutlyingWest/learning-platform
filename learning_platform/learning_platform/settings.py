@@ -189,8 +189,16 @@ LOGIN_REDIRECT_URL = 'index'
 # If user log out, redirect to 'logout' url
 LOGOUT_URL = 'logout'
 
-# For send email to console on reset password
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+# Enable encryption protocol
+EMAIL_USE_TLS = True
+# TLS use specified port 587
+EMAIL_PORT = 587
+
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 # How long reset password link in password_reset_email.html will exist
 PASSWORD_RESET_TIMEOUT_DAYS = 1
