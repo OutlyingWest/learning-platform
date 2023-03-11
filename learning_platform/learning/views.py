@@ -13,7 +13,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView, F
 from .models import Course, Lesson, Tracking, Review
 from .forms import CourseForm, ReviewForm, LessonForm, OrderByAndSearchForm, SettingsForm
 from django.db.models.signals import pre_save
-from .signals import set_views, course_enroll
+from .signals import set_views, course_enroll, get_certificate
 
 
 class MainView(ListView, FormView):
@@ -251,3 +251,9 @@ class SettingsFormView(FormView):
         initial = super(SettingsFormView, self).get_initial()
         initial['paginate_by'] = self.request.COOKIES.get('paginate_by', settings.DEFAULT_COURSES_ON_PAGE)
         return initial
+
+
+@login_required
+def get_certificate_view(request):
+    get_certificate.send(sender=request.user)
+    return HttpResponse('Сертификат отправлен на ваш Email')
