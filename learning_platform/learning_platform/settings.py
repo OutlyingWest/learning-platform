@@ -190,13 +190,18 @@ LOGOUT_URL = 'logout'
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-# Enable encryption protocol
-EMAIL_USE_TLS = True
+
 # TLS use specified port 587
 EMAIL_PORT = 587
+# Enable encryption protocol
+EMAIL_USE_TLS = True
+
 
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+# EMAIL_HOST_USER = 'alex.bringold@gmail.com'
+# EMAIL_HOST_PASSWORD = 'rctjvuymkjueotud'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # How long reset password link in password_reset_email.html will exist
 PASSWORD_RESET_TIMEOUT_DAYS = 1

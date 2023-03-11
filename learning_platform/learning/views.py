@@ -13,7 +13,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView, F
 from .models import Course, Lesson, Tracking, Review
 from .forms import CourseForm, ReviewForm, LessonForm, OrderByAndSearchForm, SettingsForm
 from django.db.models.signals import pre_save
-from .signals import set_views
+from .signals import set_views, course_enroll
 
 
 class MainView(ListView, FormView):
@@ -153,7 +153,11 @@ def enroll(request, course_id):
             ) for lesson in lessons
         ]
         Tracking.objects.bulk_create(records)
-        return HttpResponse('Вы записаны на данный курс')
+
+        # Email of succesful enroll to the course sending
+        course_enroll.send(sender=Tracking, request=request, course_id=course_id)
+
+        return HttpResponse('Вы были записаны на данный курс')
 
 
 class LessonCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
