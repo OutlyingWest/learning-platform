@@ -199,9 +199,18 @@ EMAIL_USE_TLS = True
 
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
-# EMAIL_HOST_USER = 'alex.bringold@gmail.com'
-# EMAIL_HOST_PASSWORD = 'rctjvuymkjueotud'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# This email must be set for admins and managers mailing
+SERVER_EMAIL = EMAIL_HOST_USER
+# Admin email
+LEARNING_ADMIN_EMAIL = os.environ.get('LEARNING_ADMIN_EMAIL')
+ADMINS = [
+    ('Alex', LEARNING_ADMIN_EMAIL),
+]
+MANAGERS = [
+    ('Alex', LEARNING_ADMIN_EMAIL),
+]
 
 # How long reset password link in password_reset_email.html will exist
 PASSWORD_RESET_TIMEOUT_DAYS = 1
