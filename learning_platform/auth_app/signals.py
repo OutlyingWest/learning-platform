@@ -23,6 +23,7 @@ def send_login_user_email(**kwargs):
     email.content_subtype = 'html'
     email.send(fail_silently=False)
 
+
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def grant_user_rights(sender, instance, created=True, **kwargs):
     if created:

@@ -5,7 +5,6 @@ from django.core.exceptions import ValidationError
 from django.conf import settings
 
 
-
 class CourseForm(forms.ModelForm):
 
     class Meta:
