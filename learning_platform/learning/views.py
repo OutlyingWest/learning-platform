@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.core.cache import cache, caches
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.db import transaction
 from django.db.models import Q
@@ -26,7 +27,13 @@ class MainView(ListView, FormView):
     paginate_by = 6
 
     def get_queryset(self):
-        queryset = MainView.queryset
+        # Caching
+        if 'courses' in cache:
+            queryset = cache.get('courses')
+        else:
+            queryset = MainView.queryset
+            cache.set('courses', queryset, timeout=30)
+
         if {'search', 'price_order'} != self.request.GET.keys():
             return queryset
         else:
@@ -64,17 +71,15 @@ class CourseCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 
     permission_required = ('learning.add_course', )
 
-    def get_success_url(self):
-        return reverse('detail', kwargs={'course_id': self.object.id})
-
     def form_valid(self, form):
         with transaction.atomic():
             # Get object with data from form but not save in database
             course = form.save(commit=False)
-            course.author = self.request.user
             course.save()
-            # Return after handle in parent class method "form_valid"
-            return super(CourseCreateView, self).form_valid(form)
+            course.authors.add(self.request.user)
+            # Delete cache after addition of new course for immediate updating courses info
+            cache.delete('courses')
+            return redirect(reverse('create_lesson', kwargs={'course_id': course.id}))
 
 
 class CourseDetailView(ListView):
@@ -93,7 +98,11 @@ class CourseDetailView(ListView):
         return super(CourseDetailView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
-        return Lesson.objects.select_related('course').filter(course=self.kwargs.get(self.pk_url_kwarg))
+        course_id = self.kwargs.get(self.pk_url_kwarg)
+        queryset = cache.get_or_set(f'course_{course_id}_lessons',
+                                    Lesson.objects.select_related('course').filter(course=course_id),
+                                    timeout=30)
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super(CourseDetailView, self).get_context_data(**kwargs)
@@ -129,6 +138,11 @@ class CourseDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     # Method to get updated Course data
     def get_queryset(self):
         return Course.objects.filter(id=self.kwargs.get(self.pk_url_kwarg))
+
+    def form_valid(self, form):
+        course_id = self.kwargs.get(self.pk_url_kwarg)
+        cache.delete_many(['courses', f'course_{course_id}_lessons'])
+        return super(CourseDeleteView, self).form_valid(form)
 
     def get_success_url(self):
         return reverse('index')
