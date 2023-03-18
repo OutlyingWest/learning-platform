@@ -65,7 +65,8 @@ ROOT_URLCONF = 'learning_platform.urls'
 # Session settings
 
 # Set sessions storing in file (db by default)
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = 'session_store'
 # It breaks the session not in all browsers
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # Cookie lifetime in seconds (1209600 s. = 2 weeks by default)
@@ -126,10 +127,13 @@ REDIS_PASSWORD = os.environ.get('REDIS_PASSWORD')
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': f'redis://{REDIS_PASSWORD}@127.0.0.1:6379/0',
+        'LOCATION': f'redis://:{REDIS_PASSWORD}@127.0.0.1:6379/0',
+    },
+    'session_store': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': f'redis://:{REDIS_PASSWORD}@127.0.0.1:6379/1',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
