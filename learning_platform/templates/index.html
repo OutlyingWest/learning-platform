@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load cache %}
 {% block content %}
 
     <form id="form_create" method="get">
@@ -8,39 +9,41 @@
     </form>
 
     <div class="courses_container">
-        {% for course in courses %}
-            <div class="course_preview">
-                <p><a href="{% url 'detail' course.pk %}">{{ course.title|title }}</a></p>
-                {% with favorite_courses=request.session.favorites %}
-                    {% if not course.pk in favorite_courses or not favorite_courses %}
-                        <div class="favorite_container">
-                            <form id="favorite_form"
-                                  method="post"
-                                  action="{% url 'add_favorite' course.pk %}"
-                                  title="Принять участие">
-                                {% csrf_token %}
-                                <button type="submit" class="fa fa-plus" style="color: #fa9405"></button>
-                            </form>
-                        </div>
-                    {% else %}
-                        <div class="favorite_container">
-                            <form id="favorite_form"
-                                  method="post"
-                                  action="{% url 'remove_favorite' course.pk %}"
-                                  title="Принять участие">
-                                {% csrf_token %}
-                                <button type="submit" class="fa fa-check" style="color: green"></button>
-                            </form>
-                        </div>
-                    {% endif %}
-                {% endwith %}
-                <p>{{ course.start_date|date:"j E" }}</p>
-                <p>{{ course.description|capfirst }}</p>
-                <p><span class="price">{{ course.price|default:"Бесплатно" }} у.е.</span></p>
-            </div>
-        {% empty %}
-            <p>На данный момент не найдено ни одного курса. Зайдите к нам позднее. :)</p>
-        {% endfor %}
+        {% cache 300 course_short_info request.user %}
+            {% for course in courses %}
+                <div class="course_preview">
+                    <p><a href="{% url 'detail' course.pk %}">{{ course.title|title }}</a></p>
+                    {% with favorite_courses=request.session.favorites %}
+                        {% if not course.pk in favorite_courses or not favorite_courses %}
+                            <div class="favorite_container">
+                                <form id="favorite_form"
+                                      method="post"
+                                      action="{% url 'add_favorite' course.pk %}"
+                                      title="Принять участие">
+                                    {% csrf_token %}
+                                    <button type="submit" class="fa fa-plus" style="color: #fa9405"></button>
+                                </form>
+                            </div>
+                        {% else %}
+                            <div class="favorite_container">
+                                <form id="favorite_form"
+                                      method="post"
+                                      action="{% url 'remove_favorite' course.pk %}"
+                                      title="Принять участие">
+                                    {% csrf_token %}
+                                    <button type="submit" class="fa fa-check" style="color: green"></button>
+                                </form>
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                    <p>{{ course.start_date|date:"j E" }}</p>
+                    <p>{{ course.description|capfirst }}</p>
+                    <p><span class="price">{{ course.price|default:"Бесплатно" }} у.е.</span></p>
+                </div>
+            {% empty %}
+                <p>На данный момент не найдено ни одного курса. Зайдите к нам позднее. :)</p>
+            {% endfor %}
+        {% endcache %}
     </div>
     <div class="pagination_container">
         <div class="pagination">
