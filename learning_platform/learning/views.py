@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.core.cache import cache, caches
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.db import transaction
-from django.db.models import Q, F
+from django.db.models import Q, F, Count, Sum
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.conf import settings
@@ -171,7 +171,7 @@ def enroll(request, course_id):
         # Email of succesful enroll to the course sending
         course_enroll.send(sender=Tracking, request=request, course_id=course_id)
 
-        return HttpResponse('Вы были записаны на данный курс')
+        return redirect('tracking')
 
 
 class LessonCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -251,6 +251,7 @@ class TrackingView(LoginRequiredMixin, ListView):
     model = Tracking
     template_name = 'tracking.html'
     context_object_name = 'tracks'
+
     def get_queryset(self):
         queryset_user_lessons = Tracking.objects.select_related('lesson').filter(user=self.request.user)
         queryset_annotated_user_lessons = queryset_user_lessons.annotate(header=F('lesson__course__title'))
@@ -280,6 +281,16 @@ class SettingsFormView(FormView):
 
 
 @login_required
-def get_certificate_view(request):
-    get_certificate.send(sender=request.user)
-    return HttpResponse('Сертификат отправлен на ваш Email')
+def get_certificate_view(request, course_id):
+    count_passed = (
+        Tracking.objects
+        .filter(lesson__course=course_id, user=request.user)
+        .aggregate(total_passed=Count('lesson__course'), fact_passed=Sum('passed'))
+    )
+
+    if count_passed['total_passed'] == count_passed['fact_passed']:
+        get_certificate.send(sender=request.user)
+        return HttpResponse('Сертификат отправлен на Ваш email')
+    else:
+        return HttpResponse('Вы еще не прошли курс')
+

@@ -336,3 +336,31 @@ footer {
 .pagination {
     font-size: .8em;
 }
+
+
+/* Tracking styles */
+.tracking-container {
+    display: flex;
+    flex-direction: column;
+    margin: 3% 7% 2% 1%;
+}
+
+.tracking_group {
+    border: 1px solid grey;
+    border-radius: 35px;
+    margin: 2% 0;
+    padding: 3% 10%;
+    width: 150%;
+}
+
+.tracking_group_name {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-content: center;
+    margin: 2% 0;
+}
+
+.tracking_lessons {
+    font-size: .8em;
+}
