@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.core.cache import cache, caches
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Q, F
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.conf import settings
@@ -245,6 +245,18 @@ class FavoriteCoursesView(MainView):
         queryset = super(FavoriteCoursesView, self).get_queryset()
         favorites_ids = self.request.session.get('favorites', list())
         return queryset.filter(id__in=favorites_ids)
+
+
+class TrackingView(LoginRequiredMixin, ListView):
+    model = Tracking
+    template_name = 'tracking.html'
+    context_object_name = 'tracks'
+    def get_queryset(self):
+        queryset_user_lessons = Tracking.objects.select_related('lesson').filter(user=self.request.user)
+        queryset_annotated_user_lessons = queryset_user_lessons.annotate(header=F('lesson__course__title'))
+        return queryset_annotated_user_lessons
+
+
 
 
 class SettingsFormView(FormView):
