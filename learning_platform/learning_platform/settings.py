@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY_LP')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 INTERNAL_IPS = [
     '127.0.0.1',
@@ -183,6 +183,8 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static/img',
     BASE_DIR / 'static/styles',
     BASE_DIR / 'static/scripts',
+    BASE_DIR / 'static/errors',
+
 ]
 
 # Media files

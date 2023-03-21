@@ -18,6 +18,11 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+
+handler500 = 'learning_platform.views.server_error'
+handler404 = 'learning_platform.views.page_not_found'
+handler403 = 'learning_platform.views.forbidden'
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('auth_app.urls')),
