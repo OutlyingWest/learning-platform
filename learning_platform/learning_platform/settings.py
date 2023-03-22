@@ -183,8 +183,6 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static/img',
     BASE_DIR / 'static/styles',
     BASE_DIR / 'static/scripts',
-    BASE_DIR / 'static/errors',
-
 ]
 
 # Media files
@@ -238,3 +236,15 @@ PASSWORD_RESET_TIMEOUT_DAYS = 1
 
 # Pagination of main page settings
 DEFAULT_COURSES_ON_PAGE = 4
+
+
+# Production security settings
+
+# Redirect to https connection on trying to get access through http
+SECURE_SSL_REDIRECT = True
+# Cookies through https
+CSRF_COOKIE_SECURE = True
+# How long access through https is available
+# SECURE_HSTS_SECONDS = 0
+
+
