@@ -118,7 +118,7 @@ DATABASES = {
         # Unification db query in one transaction for a controller performing. Effective for multiple queries
         'ATOMIC_REQUEST': False,
         'AUTOCOMMIT': True,
-        'OPTIONS': {'charset': 'utf8mb4'},
+        'OPTIONS': {'charset': 'utf8'},
     }
 }
 
