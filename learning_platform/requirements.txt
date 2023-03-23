@@ -4,7 +4,6 @@ Django==4.0
 mysql-connector-python==8.0.32
 mysqlclient==2.1.1
 Pillow==9.4.0
-pkg_resources==0.0.0
 protobuf==3.20.3
 redis==4.5.1
 sqlparse==0.4.3
