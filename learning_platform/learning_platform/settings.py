@@ -119,6 +119,9 @@ DATABASES = {
         'ATOMIC_REQUEST': False,
         'AUTOCOMMIT': True,
         'OPTIONS': {'charset': 'utf8mb4'},
+        'TEST': {
+            'NAME': 'learning_platform_test',
+        }
     }
 }
 
