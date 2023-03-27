@@ -1,5 +1,6 @@
 from django.contrib.auth.models import Group, Permission
-from django.contrib.auth import get_user_model
+# from django.contrib.auth import get_user_model
+from .models import User
 from django.test import TestCase, Client
 from django.shortcuts import reverse
 from django.utils import timezone
@@ -20,6 +21,7 @@ class AuthAppTestCase(TestCase):
         self.user_valid_register_data = {
             'username': ' student',
             'email': ' student@example.com',
+            'description': '',
             'birthday': timezone.now().date(),
             'password1': 'student1234',
             'password2': 'student4321'
@@ -27,11 +29,13 @@ class AuthAppTestCase(TestCase):
         self.user_invalid_register_data = {
             'username': ' student@example.com',
             'birthday': timezone.now().date(),
+            'description': '',
             'password1': 'student1234',
             'password2': 'student4321'
         }
         self.user_login_data_with_remember = {
             'username': ' student@example.com',
+            'description': 'sdfd',
             'password': 'student1234',
             'is_remember': 'on'
         }
@@ -39,10 +43,11 @@ class AuthAppTestCase(TestCase):
             'username': ' example@example.com',
             'password': 'admin1234',
         }
-        self.admin = get_user_model().objects.create_superuser(
+        self.admin = User().objects.create_superuser(
             username='admin',
             email='admin@example.com',
-            password='admin12345'
+            password='admin12345',
+
         )
         self.client = Client()
         self.register = reverse('register')
@@ -58,3 +63,9 @@ class AuthAppTestCase(TestCase):
     def test_post_register_view(self):
         response = self.client.post(path=self.register, data=self.user_valid_register_data)
         self.assertEqual(response.status_code, 200)
+
+    # def test_post_register_view_with_email_existed(self):
+    #     User().objects.create_user(**self.user_valid_register_data)
+    #
+    #     response = self.client.post(path=self.register, data=self.user_valid_register_data)
+    #     self.assertFormError(response, 'form', 'email', 'Участник с таким Email уже существует.')

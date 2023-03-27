@@ -119,8 +119,12 @@ DATABASES = {
         'ATOMIC_REQUEST': False,
         'AUTOCOMMIT': True,
         'OPTIONS': {'charset': 'utf8mb4'},
-        'TEST': {
+        'test': {
+            'ENGINE': 'django.db.backends.sqlite3',
             'NAME': 'learning_platform_test',
+            'USER': os.environ.get('USER_DB'),
+            'PASSWORD': os.environ.get('PASSWORD_DB'),
+            'HOST': 'localhost',
         }
     }
 }
