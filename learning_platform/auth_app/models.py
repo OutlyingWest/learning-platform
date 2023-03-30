@@ -5,7 +5,7 @@ from django.db import models
 from .functions import get_timestamp_path_user
 
 
-class ActualCharField(models.CharField):
+class VarCharField(models.CharField):
     def db_type(self, connection):
         longtext: str = super().db_type(connection)
         varchar: str = longtext.replace('longtext', 'varchar')
@@ -17,11 +17,11 @@ class User(AbstractUser):
 
     email = models.EmailField(verbose_name='Email', unique=True)
     birthday = models.DateField(verbose_name='Дата рождения', blank=False, null=True)
-    description = ActualCharField(verbose_name='Обо мне',
-                                   max_length=150, blank=True,
-                                   unique=False,
-                                   default='',
-                                  )
+    description = VarCharField(verbose_name='Обо мне',
+                               max_length=150, blank=True,
+                               unique=False,
+                               default='',
+                               db_index=True)
     avatar = models.ImageField(verbose_name='Фото', blank=True, upload_to=get_timestamp_path_user,
                                validators=[FileExtensionValidator(allowed_extensions=['jpg', 'bmp', 'png'],
                                                                   message='Wrong file format')])

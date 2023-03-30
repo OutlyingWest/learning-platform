@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY_LP')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1']
 
@@ -73,7 +73,7 @@ SESSION_COOKIE_AGE = 60 * 60
 # If False session saves only when it changes (False by default)
 SESSION_SAVE_EVERY_REQUEST = False
 # If True - cookie access only through https
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = False
 # Sending cookies to other sites. 'Strict' - forbid it. (None by default)
 SESSION_COOKIE_SAMESITE = 'Strict'
 
@@ -119,14 +119,11 @@ DATABASES = {
         'ATOMIC_REQUEST': False,
         'AUTOCOMMIT': True,
         'OPTIONS': {'charset': 'utf8mb4'},
-        'test': {
-            'ENGINE': 'django.db.backends.sqlite3',
+        'TEST': {
             'NAME': 'learning_platform_test',
-            'USER': os.environ.get('USER_DB'),
-            'PASSWORD': os.environ.get('PASSWORD_DB'),
-            'HOST': 'localhost',
-        }
-    }
+        },
+    },
+
 }
 
 # Caches settings
@@ -246,7 +243,7 @@ DEFAULT_COURSES_ON_PAGE = 4
 # Production security settings
 
 # Redirect to https connection on trying to get access through http
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = False
 # Cookies through https
 CSRF_COOKIE_SECURE = True
 # How long access through https is available
