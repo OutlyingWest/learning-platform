@@ -114,13 +114,13 @@ DATABASES = {
         'HOST': 'localhost',
         'USER': os.environ.get('USER_DB'),
         'PASSWORD': os.environ.get('PASSWORD_DB'),
-        'NAME': 'learning_platform',
+        'NAME': 'learning_platform_new',
         # Unification db query in one transaction for a controller performing. Effective for multiple queries
         'ATOMIC_REQUEST': False,
         'AUTOCOMMIT': True,
         'OPTIONS': {'charset': 'utf8mb4'},
         'TEST': {
-            'NAME': 'learning_platform_test',
+            'NAME': 'learning_platform_new_test',
         },
     },
 
@@ -245,7 +245,7 @@ DEFAULT_COURSES_ON_PAGE = 4
 # Redirect to https connection on trying to get access through http
 SECURE_SSL_REDIRECT = False
 # Cookies through https
-CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = False
 # How long access through https is available
 # SECURE_HSTS_SECONDS = 0
 
