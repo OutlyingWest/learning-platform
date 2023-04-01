@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
 from django.conf import settings
-from .models import User
 from django.test import TestCase, Client
 from django.shortcuts import reverse
 from django.utils import timezone
@@ -86,7 +85,6 @@ class AuthAppTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(self.client.session.get_expiry_age(), settings.SESSION_REMEMBER_AGE)
         response_index = self.client.get(self.index)
-        # print('CONTEXT CONTEXT CONTEXT', response_index.__dict__)
         self.assertTrue(response_index.context['user'].is_authenticated)
 
     def test_post_login_view_without_remember(self):
