@@ -1,10 +1,12 @@
+import json
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.cache import cache, caches
+from django.core.serializers import serialize
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.db import transaction
 from django.db.models import Q, F, Count, Sum
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.conf import settings
 from django.urls import reverse
@@ -294,3 +296,10 @@ def get_certificate_view(request, course_id):
     else:
         return HttpResponse('Вы еще не прошли курс')
 
+
+def api_courses(request):
+    courses = Course.objects.all()
+    serialized_courses = serialize(format='json', queryset=courses)
+    return JsonResponse(data=json.loads(serialized_courses),
+                        safe=False,
+                        json_dumps_params={'ensure_ascii': False, 'indent': 4})
