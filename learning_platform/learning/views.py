@@ -302,6 +302,6 @@ def api_courses(request):
     courses = Course.objects.all()
     serialized_courses = CourseSerializer().serialize(queryset=courses,
                                                       use_natural_foreign_keys=True,)
-    return JsonResponse(data=json.loads(serialized_courses),
+    return JsonResponse(data=dict(courses=json.loads(serialized_courses)),
                         safe=False,
                         json_dumps_params={'ensure_ascii': False, 'indent': 4})
