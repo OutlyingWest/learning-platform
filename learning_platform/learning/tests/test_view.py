@@ -127,13 +127,14 @@ class LearningViewTestCase(TestCase):
             self.assertRedirects(response, self.index, status_code=302)
             self.assertIn(course_id, self.client.session.get('favourites'))
 
+    @tag('add_remove_favourites')
     def test_add_remove_favourites(self):
         session = self.client.session
 
         session['favourites'] = [1, 3]
         session.save()
         response = self.client.post(reverse('remove_favorite', kwargs={'course_id': 3}))
-        self.assertEqual(len(self.client.session.get('favourites')), 3)
+        self.assertEqual(len(self.client.session.get('favourites')), 1)
         self.assertRedirects(response, self.index, status_code=302)
         self.assertNotIn(3, self.client.session.get('favourites'))
 
