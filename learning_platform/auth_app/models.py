@@ -40,5 +40,10 @@ class User(AbstractUser):
         verbose_name = 'Участник'
         ordering = ['last_name']
 
+    def natural_key(self):
+        return self.get_full_name()
+
     def __str__(self):
         return f'Участник {self.first_name} {self.last_name}: {self.email}'
+
+
