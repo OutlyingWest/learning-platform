@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     # Custom apps
     'auth_app.apps.AuthAppConfig',
     'learning.apps.LearningConfig',
+    # Third party apps
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
