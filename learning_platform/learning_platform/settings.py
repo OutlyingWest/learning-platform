@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     # Custom apps
     'auth_app.apps.AuthAppConfig',
     'learning.apps.LearningConfig',
+    'api',
     # Third party apps
     'rest_framework',
 ]
