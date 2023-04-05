@@ -7,7 +7,7 @@ from learning.models import Course, Tracking
 from auth_app.models import User
 
 
-class UserSerializer(ModelSerializer):
+class CourseUserSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ('email', 'last_name', )
@@ -17,7 +17,7 @@ class UserSerializer(ModelSerializer):
 
 
 class CourseSerializer(ModelSerializer):
-    authors = UserSerializer(many=True)
+    authors = CourseUserSerializer(many=True)
 
     class Meta:
         model = Course
@@ -31,6 +31,64 @@ class CourseSerializer(ModelSerializer):
             'duration',
             'count_lessons',
         )
+
+
+class UserSerializer(ModelSerializer):
+    first_name = serializers.CharField(write_only=True, required=True)
+    last_name = serializers.CharField(write_only=True, required=True)
+    description = serializers.CharField(max_length=200, default='', required=False, allow_null=True)
+    avatar = serializers.ImageField(use_url=True)
+
+    class Meta:
+        model = User
+        fields = (
+            'first_name',
+            'last_name',
+            'password',
+            'email',
+            'birthday',
+            'description',
+            'avatar',
+        )
+        extra_kwargs = {
+            'password': {
+                'write_only': True,
+            }
+        }
+
+    def to_internal_value(self, data):
+        data['first_name'] = ''
+        data['last_name'] = ''
+        return data
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['name'] = instance.get_full_name()
+        return data
+
+    def validate(self, data):
+        errors = []
+
+        name = data.get('name').split()
+        if not name or len(name) == 1:
+            errors.append({'name': 'Hе указано имя и фамилия для нового пользователя'})
+        if len(data.get('description')) > 200:
+            errors.append({'description': 'Описание слишком большое (max = 200 символов)'})
+        if errors:
+            raise serializers.ValidationError({'errors': errors})
+        return data
+
+    def save(self, validated_data):
+        *converted_dict, = map(lambda x: dict(zip(dict(validated_data).keys(), x)),
+                               zip(*dict(validated_data).values()))
+        validated_data = dict(*converted_dict)
+        name = validated_data.pop('name').split()
+        validated_data['first_name'] = name[0]
+        validated_data['last_name'] = name[1]
+        user = User(**validated_data)
+        user.set_password(validated_data['password'][0])
+        user.save()
+        return user
 
 
 class AnalyticCourseSerializer(Serializer):
