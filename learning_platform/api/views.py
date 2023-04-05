@@ -3,7 +3,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from learning.models import Course
-from .serializers import CourseSerializer
+from .serializers import CourseSerializer, AnalyticCourseSerializer
+from .analytics import AnalyticReport
 
 
 @api_view(['GET', 'POST'])
@@ -13,7 +14,7 @@ def courses(request):
     return Response(data=courses_serializer.data, status=status.HTTP_200_OK)
 
 
-@api_view(["GET"])
+@api_view(['GET'])
 def courses_id(request, course_id):
     try:
         course = Course.objects.get(id=course_id)
@@ -21,6 +22,17 @@ def courses_id(request, course_id):
         return Response(data=course_serializer.data, status=status.HTTP_200_OK)
     except ObjectDoesNotExist as exception:
         return Response(data={'error': 'Запрашиваемый курс отсутствует в системе'}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+def analytics(request):
+    courses_objects = Course.objects.all()
+    reports = [AnalyticReport(course=course) for course in courses_objects]
+    analytic_serializer = AnalyticCourseSerializer(reports, many=True, context={'request': request})
+    return Response(data=analytic_serializer.data, status=status.HTTP_200_OK)
+
+
+
 
 
 
