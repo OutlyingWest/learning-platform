@@ -3,17 +3,30 @@ from django.db.models import ObjectDoesNotExist
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status, serializers
+from rest_framework.views import APIView
+from rest_framework.parsers import JSONParser, MultiPartParser, FormParser
+from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer, AdminRenderer
 from auth_app.models import User
 from learning.models import Course
 from .serializers import CourseSerializer, AnalyticCourseSerializer, AnalyticSerializer, UserSerializer
 from .analytics import AnalyticReport
 
 
-@api_view(['GET', 'POST'])
-def courses(request):
-    courses_objects = Course.objects.all()
-    courses_serializer = CourseSerializer(instance=courses_objects, many=True)
-    return Response(data=courses_serializer.data, status=status.HTTP_200_OK)
+class CourseAPIView(APIView):
+    http_method_names = ['get', 'options', ]
+    parser_class = (JSONParser, MultiPartParser, FormParser, )
+    renderer_classes = (JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer, AdminRenderer, )
+
+    def get(self, request):
+        courses_objects = Course.objects.all()
+        courses_serializer = CourseSerializer(instance=courses_objects, many=True)
+        return Response(data=courses_serializer.data, status=status.HTTP_200_OK)
+
+    def get_view_name(self):
+        return 'Список курсов'
+
+    def get_view_description(self, html=False):
+        return 'Информация о всех курсах, размещённых на платформе'
 
 
 @api_view(['GET'])

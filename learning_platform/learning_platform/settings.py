@@ -252,4 +252,12 @@ CSRF_COOKIE_SECURE = False
 # How long access through https is available
 # SECURE_HSTS_SECONDS = 0
 
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
+    'URL_FORMAT_OVERRIDE': 'to',
+}
+
 
