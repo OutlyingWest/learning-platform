@@ -2,7 +2,10 @@ import django.db
 from django.db.models import ObjectDoesNotExist
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework import status, serializers
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.views import APIView
 from rest_framework.parsers import JSONParser, MultiPartParser, FormParser
 from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer, AdminRenderer
@@ -12,7 +15,34 @@ from .serializers import CourseSerializer, AnalyticCourseSerializer, AnalyticSer
 from .analytics import AnalyticReport
 
 
+class CourseListAPIView(ListAPIView):
+    """Полный список курсов, размещённых на платформе"""
+    name = 'Список курсов'
+    serializer_class = CourseSerializer
+    pagination_class = PageNumberPagination
+    filter_backends = (SearchFilter, OrderingFilter, )
+    search_fields = ('title', 'description', 'authors__first_name', 'authors__last_name', )
+    ordering_fields = ('start_date', 'price', )
+    ordering = 'title'
+
+    def get_queryset(self):
+        return Course.objects.all()
+
+
+class CourseRetrieveAPIView(RetrieveAPIView):
+    """Получение курса по id, переданному в URL"""
+    name = 'Курс'
+    serializer_class = CourseSerializer
+    lookup_field = 'id'
+    lookup_url_kwargs = 'course_id'
+
+    def get_queryset(self):
+        return Course.objects.all()
+
+
 class CourseAPIView(APIView):
+    """Информация о всех курсах, размещённых на платформе."""
+    name = 'Список курсов'
     http_method_names = ['get', 'options', ]
     parser_class = (JSONParser, MultiPartParser, FormParser, )
     renderer_classes = (JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer, AdminRenderer, )
@@ -22,21 +52,11 @@ class CourseAPIView(APIView):
         courses_serializer = CourseSerializer(instance=courses_objects, many=True)
         return Response(data=courses_serializer.data, status=status.HTTP_200_OK)
 
-    def get_view_name(self):
-        return 'Список курсов'
+    def post(self, request):
+        pass
 
-    def get_view_description(self, html=False):
-        return 'Информация о всех курсах, размещённых на платформе'
-
-
-@api_view(['GET'])
-def courses_id(request, course_id):
-    try:
-        course = Course.objects.get(id=course_id)
-        course_serializer = CourseSerializer(instance=course, many=False)
-        return Response(data=course_serializer.data, status=status.HTTP_200_OK)
-    except ObjectDoesNotExist as exception:
-        return Response(data={'error': 'Запрашиваемый курс отсутствует в системе'}, status=status.HTTP_404_NOT_FOUND)
+    def put(self, request):
+        pass
 
 
 @api_view(['GET'])
