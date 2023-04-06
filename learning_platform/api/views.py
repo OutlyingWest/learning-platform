@@ -24,10 +24,9 @@ class CourseListAPIView(ListAPIView):
     search_fields = ('title', 'description', 'authors__first_name', 'authors__last_name', )
     ordering_fields = ('start_date', 'price', )
     ordering = 'title'
-    queryset = Course.objects.all()
 
-    # def get_queryset(self):
-    #     return Course.objects.all()
+    def get_queryset(self):
+        return Course.objects.all()
 
 
 class CourseRetrieveAPIView(RetrieveAPIView):
