@@ -24,9 +24,10 @@ class CourseListAPIView(ListAPIView):
     search_fields = ('title', 'description', 'authors__first_name', 'authors__last_name', )
     ordering_fields = ('start_date', 'price', )
     ordering = 'title'
+    queryset = Course.objects.all()
 
-    def get_queryset(self):
-        return Course.objects.all()
+    # def get_queryset(self):
+    #     return Course.objects.all()
 
 
 class CourseRetrieveAPIView(RetrieveAPIView):
@@ -38,25 +39,6 @@ class CourseRetrieveAPIView(RetrieveAPIView):
 
     def get_queryset(self):
         return Course.objects.all()
-
-
-class CourseAPIView(APIView):
-    """Информация о всех курсах, размещённых на платформе."""
-    name = 'Список курсов'
-    http_method_names = ['get', 'options', ]
-    parser_class = (JSONParser, MultiPartParser, FormParser, )
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer, AdminRenderer, )
-
-    def get(self, request):
-        courses_objects = Course.objects.all()
-        courses_serializer = CourseSerializer(instance=courses_objects, many=True)
-        return Response(data=courses_serializer.data, status=status.HTTP_200_OK)
-
-    def post(self, request):
-        pass
-
-    def put(self, request):
-        pass
 
 
 @api_view(['GET'])
@@ -86,11 +68,3 @@ def users(request):
                             status=status.HTTP_400_BAD_REQUEST)
         except Exception as exception:
             return Response(data={'error': str(exception)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-
-
-
-
-
-
