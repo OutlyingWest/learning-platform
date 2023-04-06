@@ -103,6 +103,7 @@ media/
 *.pyc
 *.db
 *.pid
+.idea/
 
 # Ignore Django Migrations
 **/migrations/**
