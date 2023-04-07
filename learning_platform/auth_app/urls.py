@@ -4,12 +4,12 @@ from django.contrib.auth.views import (LogoutView,
                                        PasswordChangeView, PasswordChangeDoneView)
 from django.views.decorators.cache import cache_control
 from django.urls import path
-from . import views
+from .views import *
 
 urlpatterns = [
     # Controllers for users management
-    path('login/', cache_control(private=True)(views.UserLoginView.as_view()), name='login'),
-    path('register/', cache_control(private=True)(views.UserRegisterView.as_view()), name='register'),
+    path('login/', cache_control(private=True)(UserLoginView.as_view()), name='login'),
+    path('register/', cache_control(private=True)(UserRegisterView.as_view()), name='register'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     # Controllers for change password
     path('password_change/', PasswordChangeView.as_view(), name='password_change'),
