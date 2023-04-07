@@ -34,7 +34,7 @@ class CourseRetrieveAPIView(RetrieveAPIView):
     name = 'Курс'
     serializer_class = CourseSerializer
     lookup_field = 'id'
-    lookup_url_kwargs = 'course_id'
+    lookup_url_kwarg = 'course_id'
 
     def get_queryset(self):
         return Course.objects.all()
