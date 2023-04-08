@@ -17,7 +17,7 @@ class CourseUserSerializer(ModelSerializer):
 
 
 class CourseSerializer(ModelSerializer):
-    authors = CourseUserSerializer(many=True)
+    authors = CourseUserSerializer(many=True, read_only=True)
 
     class Meta:
         model = Course
@@ -31,6 +31,12 @@ class CourseSerializer(ModelSerializer):
             'duration',
             'count_lessons',
         )
+
+
+class UserAdminSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
 
 
 class UserSerializer(ModelSerializer):
