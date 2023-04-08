@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework import status, serializers
+from rest_framework.authentication import BasicAuthentication, TokenAuthentication
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.views import APIView
@@ -19,6 +20,7 @@ class CourseListAPIView(ListAPIView):
     """Полный список курсов, размещённых на платформе"""
     name = 'Список курсов'
     serializer_class = CourseSerializer
+    authentication_classes = (TokenAuthentication, )
     pagination_class = PageNumberPagination
     filter_backends = (SearchFilter, OrderingFilter, )
     search_fields = ('title', 'description', 'authors__first_name', 'authors__last_name', )

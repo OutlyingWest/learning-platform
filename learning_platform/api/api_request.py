@@ -17,10 +17,13 @@ auth_data = {
     'password': '123450',
 }
 
-userpass = '{0}:{1}'.format(auth_data['username'], auth_data['password'])
-userpass_encoded = base64.b64encode(userpass.encode()).decode()
-print(userpass_encoded)
+# userpass = '{0}:{1}'.format(auth_data['username'], auth_data['password'])
+# userpass_encoded = base64.b64encode(userpass.encode()).decode()
+# print(userpass_encoded)
 
-response = requests.get(url='http://127.0.0.1:8000/api/users/',
-                        auth=HTTPBasicAuth(auth_data['username'], auth_data['password']))
+# response = requests.get(url='http://127.0.0.1:8000/api/users/',
+#                         headers={'Authorization': '9c2e27e6cbd2bf9d3019981146488e20a597dcc9'})
+
+response = requests.post(url='http://127.0.0.1:8000/api/generate-token/', data=auth_data)
+
 print(response.text, response.status_code)
