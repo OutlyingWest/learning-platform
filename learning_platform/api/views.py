@@ -1,26 +1,28 @@
 import django.db
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, get_list_or_404
 from rest_framework.decorators import api_view
 from rest_framework.renderers import AdminRenderer
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework import status, serializers
 from rest_framework.authentication import BasicAuthentication, TokenAuthentication
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.generics import ListAPIView, RetrieveAPIView, ListCreateAPIView, CreateAPIView, \
     RetrieveDestroyAPIView
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import ViewSet, ModelViewSet
 from auth_app.models import User
-from learning.models import Course
+from learning.models import Course, Tracking
 
-from .serializers import CourseSerializer, AnalyticSerializer, UserSerializer, UserAdminSerializer
+from .serializers import CourseSerializer, AnalyticSerializer, UserSerializer, UserAdminSerializer, \
+    StudentTrackingSerializer, AuthorTrackingSerializer
 from .analytics import AnalyticReport
-from .permissions import IsAuthor
+from .permissions import IsAuthor, IsStudent
 
 
 class AnalyticViewSet(ViewSet):
     """Статистика по курсам/-у"""
+
     def list(self, request):
         courses_objects = Course.objects.all()
         reports = [AnalyticReport(course=course) for course in courses_objects]
@@ -96,6 +98,68 @@ class CourseRetrieveAPIView(RetrieveAPIView):
 
     def get_queryset(self):
         return Course.objects.all()
+
+
+class TrackingStudentViewSet(ModelViewSet):
+    serializer_class = StudentTrackingSerializer
+    permission_classes = (IsAuthenticated, IsStudent, )
+    lookup_field = 'lesson__course'
+    lookup_url_kwargs = 'course_id'
+
+    def get_queryset(self):
+        return Tracking.objects.filter(user=self.request.user)
+
+    def get_object(self):
+        tracking = self.get_queryset()
+        filters = {self.lookup_field: self.kwargs[self.lookup_url_kwargs]}
+        return get_list_or_404(tracking, **filters)
+
+    def retrieve(self, request, *args, **kwargs):
+        tracking = self.get_object()
+        tracking_serializer = self.get_serializer(tracking, many=True)
+        return Response(tracking_serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data, many=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.instance = self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        return serializer.save(user=self.request.user, lesson=self.request.data['lesson'])
+
+    def get_view_name(self):
+        return 'Статистика прохождения курсов / Ученик'
+
+
+class TrackingAuthorViewSet(TrackingStudentViewSet):
+    serializer_class = AuthorTrackingSerializer
+    permission_classes = (IsAuthenticated, IsAuthor, )
+    filter_backends = (SearchFilter, OrderingFilter,)
+    search_fields = ('user__last_name', 'user__first_name', 'lesson__name', )
+
+    def get_queryset(self):
+        return Tracking.objects.filter(lesson__course__authors=self.request.user)
+
+    def perform_create(self, serializer):
+        data = self.request.data
+        return serializer.save(user=User.objects.get(id=data['user']), lesson=data['lesson'])
+
+    def get_view_name(self):
+        return 'Статистика прохождения курсов / Автор'
+
+    def partial_update(self, request, *args, **kwargs):
+        data = sorted(request.data, key=lambda x: x['id'])
+        ids = list(map(lambda x: x['id'], data))
+        instances = Tracking.objects.filter(id__in=ids).order_by('id')
+        serializer = self.get_serializer(instances, data=data, many=True, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
+
+    def perform_update(self, serializer):
+        serializer.update(serializer.instance, serializer.validated_data)
 
 
 @api_view(['GET', 'POST'])
