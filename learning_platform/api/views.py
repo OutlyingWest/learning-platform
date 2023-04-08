@@ -1,4 +1,5 @@
 import django.db
+from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.renderers import AdminRenderer
 from rest_framework.response import Response
@@ -9,11 +10,32 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.generics import ListAPIView, RetrieveAPIView, ListCreateAPIView, CreateAPIView, \
     RetrieveDestroyAPIView
+from rest_framework.viewsets import ViewSet
 from auth_app.models import User
 from learning.models import Course
+
 from .serializers import CourseSerializer, AnalyticSerializer, UserSerializer, UserAdminSerializer
 from .analytics import AnalyticReport
 from .permissions import IsAuthor
+
+
+class AnalyticViewSet(ViewSet):
+    """Статистика по курсам/-у"""
+    def list(self, request):
+        courses_objects = Course.objects.all()
+        reports = [AnalyticReport(course=course) for course in courses_objects]
+        analytic_serializer = AnalyticSerializer(reports, many=False, context={'request': request})
+        return Response(data=analytic_serializer.data, status=status.HTTP_200_OK)
+
+    def retrieve(self, request, course_id):
+        course = get_object_or_404(Course, id=course_id)
+
+        reports = [AnalyticReport(course=course)]
+        analytic_serializer = AnalyticSerializer(reports, many=False, context={'request': request})
+        return Response(data=analytic_serializer.data, status=status.HTTP_200_OK)
+
+    def get_view_name(self):
+        return 'Аналитика'
 
 
 class UserForAdminView(ListCreateAPIView):
@@ -74,14 +96,6 @@ class CourseRetrieveAPIView(RetrieveAPIView):
 
     def get_queryset(self):
         return Course.objects.all()
-
-
-@api_view(['GET'])
-def analytics(request):
-    courses_objects = Course.objects.all()
-    reports = [AnalyticReport(course=course) for course in courses_objects]
-    analytic_serializer = AnalyticSerializer(reports, many=False, context={'request': request})
-    return Response(data=analytic_serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET', 'POST'])

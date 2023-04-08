@@ -5,8 +5,9 @@ from .views import *
 urlpatterns = [
     path('courses/', CourseListAPIView.as_view(), name='courses'),
     path('courses/<int:course_id>/', CourseRetrieveAPIView.as_view(), name='courses_id'),
-    path('analytics/', analytics, name='analytics'),
     path('users/', users, name='users'),
+    path('analytics/', AnalyticViewSet.as_view(actions={'get': 'list'}), name='analytics'),
+    path('analytics/<int:course_id>', AnalyticViewSet.as_view(actions={'get': 'retrieve'}), name='analytics_id'),
     # Authentication urls
     path('authentication/', include('rest_framework.urls')),
     path('generate-token/', obtain_auth_token, name='generate-token'),
