@@ -22,7 +22,5 @@ userpass_encoded = base64.b64encode(userpass.encode()).decode()
 print(userpass_encoded)
 
 response = requests.get(url='http://127.0.0.1:8000/api/users/',
-                        headers={
-                            'Authorization': 'Basic {}'. format(userpass_encoded)
-                        })
+                        auth=HTTPBasicAuth(auth_data['username'], auth_data['password']))
 print(response.text, response.status_code)
