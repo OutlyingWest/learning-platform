@@ -7,7 +7,7 @@ from .views import *
 router = DefaultRouter(trailing_slash=True)
 router.register('analytics', AnalyticViewSet, basename='analytic')
 router.register('trackings', TrackingStudentViewSet, basename='tracking')
-router.register('trackings_for_authors', TrackingStudentViewSet, basename='tracking_for_authors')
+router.register('trackings_for_authors', TrackingAuthorViewSet, basename='tracking_for_authors')
 
 
 
