@@ -67,7 +67,7 @@ class CourseDeleteView(RetrieveDestroyAPIView):
     name = 'Удалить курс'
     serializer_class = CourseSerializer
     lookup_field = 'id'
-    lookup_url_kwargs = 'course_id'
+    lookup_url_kwarg = 'course_id'
     authentication_classes = (BasicAuthentication, )
     permission_classes = (IsAuthor, )
 
@@ -106,14 +106,14 @@ class TrackingStudentViewSet(ModelViewSet):
     serializer_class = StudentTrackingSerializer
     permission_classes = (IsAuthenticated, IsStudent, )
     lookup_field = 'lesson__course'
-    lookup_url_kwargs = 'course_id'
+    lookup_url_kwarg = 'course_id'
 
     def get_queryset(self):
         return Tracking.objects.filter(user=self.request.user)
 
     def get_object(self):
         tracking = self.get_queryset()
-        filters = {self.lookup_field: self.kwargs[self.lookup_url_kwargs]}
+        filters = {self.lookup_field: self.kwargs[self.lookup_url_kwarg]}
         return get_list_or_404(tracking, **filters)
 
     def retrieve(self, request, *args, **kwargs):

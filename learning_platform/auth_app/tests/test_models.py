@@ -8,7 +8,7 @@ class UserModelTestCase(TestCase):
     def setUp(self) -> None:
         self.user_data = {
             'username': 'alex',
-            'email': ' alexeybuv@yandex.ru',
+            'email': 'alexeybuv@yandex.ru',
             'description': '',
             'birthday': timezone.now().date(),
             'password': 'student1234',

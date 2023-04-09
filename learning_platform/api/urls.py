@@ -9,7 +9,8 @@ router.register('analytics', AnalyticViewSet, basename='analytic')
 router.register('trackings', TrackingStudentViewSet, basename='tracking')
 router.register('trackings_for_authors', TrackingAuthorViewSet, basename='tracking_for_authors')
 
-
+for url in router.urls:
+    print(url)
 
 urlpatterns = [
     path('courses/', CourseListAPIView.as_view(), name='courses'),
