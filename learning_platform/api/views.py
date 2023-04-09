@@ -1,6 +1,6 @@
 import django.db
 from django.shortcuts import get_object_or_404, get_list_or_404
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, action
 from rest_framework.renderers import AdminRenderer
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -29,7 +29,8 @@ class AnalyticViewSet(ViewSet):
         analytic_serializer = AnalyticSerializer(reports, many=False, context={'request': request})
         return Response(data=analytic_serializer.data, status=status.HTTP_200_OK)
 
-    def retrieve(self, request, course_id):
+    @action(methods=('get', ), detail=False, url_path='(?P<course_id>[^/.]+)')
+    def detail_analytic(self, request, course_id):
         course = get_object_or_404(Course, id=course_id)
 
         reports = [AnalyticReport(course=course)]
@@ -101,6 +102,7 @@ class CourseRetrieveAPIView(RetrieveAPIView):
 
 
 class TrackingStudentViewSet(ModelViewSet):
+    http_method_names = ('get', 'post', 'options', )
     serializer_class = StudentTrackingSerializer
     permission_classes = (IsAuthenticated, IsStudent, )
     lookup_field = 'lesson__course'
@@ -119,7 +121,8 @@ class TrackingStudentViewSet(ModelViewSet):
         tracking_serializer = self.get_serializer(tracking, many=True)
         return Response(tracking_serializer.data)
 
-    def create(self, request, *args, **kwargs):
+    @action(methods=('post',), detail=False, name='Запись на курс')
+    def enroll(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data, many=True)
         serializer.is_valid(raise_exception=True)
         serializer.instance = self.perform_create(serializer)
@@ -129,11 +132,9 @@ class TrackingStudentViewSet(ModelViewSet):
     def perform_create(self, serializer):
         return serializer.save(user=self.request.user, lesson=self.request.data['lesson'])
 
-    def get_view_name(self):
-        return 'Статистика прохождения курсов / Ученик'
-
 
 class TrackingAuthorViewSet(TrackingStudentViewSet):
+    http_method_names = ('get', 'post', 'patch', 'options', )
     serializer_class = AuthorTrackingSerializer
     permission_classes = (IsAuthenticated, IsAuthor, )
     filter_backends = (SearchFilter, OrderingFilter,)
@@ -146,10 +147,8 @@ class TrackingAuthorViewSet(TrackingStudentViewSet):
         data = self.request.data
         return serializer.save(user=User.objects.get(id=data['user']), lesson=data['lesson'])
 
-    def get_view_name(self):
-        return 'Статистика прохождения курсов / Автор'
-
-    def partial_update(self, request, *args, **kwargs):
+    @action(methods=('patch',), detail=False, name='Отметка о сдаче урока')
+    def update_passed(self, request, *args, **kwargs):
         data = sorted(request.data, key=lambda x: x['id'])
         ids = list(map(lambda x: x['id'], data))
         instances = Tracking.objects.filter(id__in=ids).order_by('id')
