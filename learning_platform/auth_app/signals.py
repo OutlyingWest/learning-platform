@@ -29,7 +29,6 @@ def grant_user_rights(sender, instance, created=True, **kwargs):
     if created:
         pupil = Group.objects.filter(name='Ученик')
         instance.groups.set(pupil)
-        print(f'Пользователь {instance} успешно добавлен в группу "Ученик"')
 
 
 account_access.connect(send_login_user_email)

@@ -21,16 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY_LP')
+SECRET_KEY = 'hfiewhfiwqhefuiyu873r324rydfhih7qv48!ht^6z=e3ngz*07-mw61ccm%c)ew^wz7sdf45vvt7vldk='
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
-
-INTERNAL_IPS = [
-    '127.0.0.1',
-]
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -135,16 +131,16 @@ REDIS_PASSWORD = os.environ.get('REDIS_PASSWORD')
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': f'redis://:{REDIS_PASSWORD}@127.0.0.1:6379/0',
+        'LOCATION': f'redis://127.0.0.1:6379/0',
     },
     'session_store': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': f'redis://:{REDIS_PASSWORD}@127.0.0.1:6379/1',
+        'LOCATION': f'redis://127.0.0.1:6379/1',
     }
 }
 # For overall site caching on server
 CACHE_MIDDLEWARE_ALIAS = 'default'
-CACHE_MIDDLEWARE_SECONDS = 600
+CACHE_MIDDLEWARE_SECONDS = 3
 CACHE_MIDDLEWARE_KEY_PREFIX = ''
 
 # Password validation
