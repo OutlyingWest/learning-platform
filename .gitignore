@@ -103,11 +103,13 @@ media/
 *.pyc
 *.db
 *.pid
+.idea/
 
 # Ignore Django Migrations
 **/migrations/**
 !**/migrations
 !**/migrations/__init__.py
+
 
 # Ignore static
 learning_platform/static/admin/
@@ -118,3 +120,7 @@ learning_platform/static/*.css
 
 # Ignore gunicorn config
 config/
+
+# fixtures
+fixtures/
+

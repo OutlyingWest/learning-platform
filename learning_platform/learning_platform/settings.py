@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     # Custom apps
     'auth_app.apps.AuthAppConfig',
     'learning.apps.LearningConfig',
+    'api',
+    # Third party apps
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -110,12 +113,16 @@ DATABASES = {
         'HOST': 'localhost',
         'USER': os.environ.get('USER_DB'),
         'PASSWORD': os.environ.get('PASSWORD_DB'),
-        'NAME': 'learning_platform',
+        'NAME': 'learning_platform_new',
         # Unification db query in one transaction for a controller performing. Effective for multiple queries
         'ATOMIC_REQUEST': False,
         'AUTOCOMMIT': True,
         'OPTIONS': {'charset': 'utf8mb4'},
-    }
+        'TEST': {
+            'NAME': 'learning_platform_new_test',
+        },
+    },
+
 }
 
 # Caches settings
