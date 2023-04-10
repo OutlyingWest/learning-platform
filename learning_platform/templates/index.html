@@ -9,7 +9,7 @@
     </form>
 
     <div class="courses_container">
-        {% cache 300 course_short_info request.user %}
+        {% cache 3 course_short_info request.user %}
             {% for course in courses %}
                 <div class="course_preview">
                     <p><a href="{% url 'detail' course.pk %}">{{ course.title|title }}</a></p>

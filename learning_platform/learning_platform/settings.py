@@ -21,16 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY_LP')
+SECRET_KEY = 'hfiewhfiwqhefuiyu873r324rydfhih7qv48!ht^6z=e3ngz*07-mw61ccm%c)ew^wz7sdf45vvt7vldk='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
-
-INTERNAL_IPS = [
-    '127.0.0.1',
-]
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -73,7 +69,7 @@ SESSION_COOKIE_AGE = 60 * 60
 # If False session saves only when it changes (False by default)
 SESSION_SAVE_EVERY_REQUEST = False
 # If True - cookie access only through https
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = False
 # Sending cookies to other sites. 'Strict' - forbid it. (None by default)
 SESSION_COOKIE_SAMESITE = 'Strict'
 
@@ -127,16 +123,16 @@ REDIS_PASSWORD = os.environ.get('REDIS_PASSWORD')
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': f'redis://:{REDIS_PASSWORD}@127.0.0.1:6379/0',
+        'LOCATION': f'redis://127.0.0.1:6379/0',
     },
     'session_store': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': f'redis://:{REDIS_PASSWORD}@127.0.0.1:6379/1',
+        'LOCATION': f'redis://127.0.0.1:6379/1',
     }
 }
 # For overall site caching on server
 CACHE_MIDDLEWARE_ALIAS = 'default'
-CACHE_MIDDLEWARE_SECONDS = 600
+CACHE_MIDDLEWARE_SECONDS = 3
 CACHE_MIDDLEWARE_KEY_PREFIX = ''
 
 # Password validation
@@ -239,9 +235,9 @@ DEFAULT_COURSES_ON_PAGE = 4
 # Production security settings
 
 # Redirect to https connection on trying to get access through http
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = False
 # Cookies through https
-CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = False
 # How long access through https is available
 # SECURE_HSTS_SECONDS = 0
 

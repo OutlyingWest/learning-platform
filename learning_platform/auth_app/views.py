@@ -30,6 +30,7 @@ class UserLoginView(LoginView):
 
 
 class UserRegisterView(CreateView):
+    model = settings.AUTH_USER_MODEL
     form_class = RegisterForm
     template_name = 'register.html'
 

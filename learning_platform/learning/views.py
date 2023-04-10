@@ -101,7 +101,7 @@ class CourseDetailView(ListView):
         course_id = self.kwargs.get(self.pk_url_kwarg)
         queryset = cache.get_or_set(f'course_{course_id}_lessons',
                                     Lesson.objects.select_related('course').filter(course=course_id),
-                                    timeout=30)
+                                    timeout=3)
         return queryset
 
     def get_context_data(self, **kwargs):
